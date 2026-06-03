@@ -64,8 +64,10 @@ export default function MenuPerformanceTable({ itemSelections, checks, start, en
   const thStyle = { cursor: 'pointer', userSelect: 'none' };
 
   return (
-    <div style={{ overflowX: 'auto' }}>
-      <table data-role="menu-table">
+    <div>
+      <h2 className="chart-section-title">Menu Performance</h2>
+      <div style={{ overflowX: 'auto', background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: '10px' }}>
+      <table data-role="menu-table" style={{ border: 'none' }}>
         <thead data-sortable="true">
           <tr>
             <th style={thStyle} onClick={() => handleHeaderClick('menuItem')}>
