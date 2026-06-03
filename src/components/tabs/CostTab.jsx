@@ -79,20 +79,20 @@ export default function CostTab({ checks, timeEntries }) {
         </tbody>
       </table>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
-        <div data-period="weekly">
+      <div className="kpi-grid-3">
+        <div data-period="weekly" className="period-card">
           <KpiCard label="Weekly Net Sales" value={currencyFmt(weeklyNetSales)} />
           <div data-hidden="true">
             <KpiCard label="Weekly Net Profit" value={currencyFmt(weeklyNetProfit)} />
           </div>
         </div>
-        <div data-period="monthly">
+        <div data-period="monthly" className="period-card">
           <KpiCard label="Monthly Net Sales" value={currencyFmt(monthlyNetSales)} />
           <div data-hidden="true">
             <KpiCard label="Monthly Net Profit" value={currencyFmt(monthlyNetProfit)} />
           </div>
         </div>
-        <div data-period="yearly">
+        <div data-period="yearly" className="period-card">
           <KpiCard label="Yearly Net Sales" value={currencyFmt(yearlyNetSales)} />
           <div data-hidden="true">
             <KpiCard label="Yearly Net Profit" value={currencyFmt(yearlyNetProfit)} />
