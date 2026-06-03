@@ -1,0 +1,30 @@
+import { create } from 'zustand';
+import { presetToRange } from '../lib/dateUtils.js';
+import { COST_DEFAULTS } from '../data/constants.js';
+
+const useDashboardStore = create((set) => ({
+  activeTab: 'revenue',
+  dateRange: (() => {
+    const { start, end } = presetToRange('30d');
+    return { preset: '30d', start, end };
+  })(),
+  costInputs: { ...COST_DEFAULTS },
+
+  actions: {
+    setActiveTab: (tab) => set({ activeTab: tab }),
+
+    setDateRange: (opts) => set((state) => {
+      if (opts.preset) {
+        const { start, end } = presetToRange(opts.preset);
+        return { dateRange: { preset: opts.preset, start, end } };
+      }
+      return { dateRange: { preset: null, start: opts.start, end: opts.end } };
+    }),
+
+    setCostInputs: (partial) => set((state) => ({
+      costInputs: { ...state.costInputs, ...partial },
+    })),
+  },
+}));
+
+export default useDashboardStore;
