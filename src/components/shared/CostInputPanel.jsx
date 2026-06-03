@@ -11,14 +11,20 @@ export default function CostInputPanel({ checks, timeEntries }) {
   const laborPct = getLaborPct(timeEntries, checks, start, end);
 
   return (
-    <div>
-      <button onClick={() => setExpanded(e => !e)}>
+    <div className="cost-panel-card">
+      <button
+        className="cost-toggle"
+        onClick={() => setExpanded(e => !e)}
+        aria-expanded={expanded}
+      >
+        <span className="chevron">▾</span>
         {expanded ? 'Collapse' : 'Expand'} Cost Inputs
       </button>
+
       {expanded && (
-        <div>
+        <div className="cost-panel-body">
           <div data-role="cost-notice">
-            <p>This section requires your input.</p>
+            <p><strong>This section requires your input.</strong></p>
             <p>
               Toast POS does not capture food costs, rent, utilities, or supply costs.
               Labor cost below is calculated automatically from your staff clock-in data.
@@ -69,7 +75,7 @@ export default function CostInputPanel({ checks, timeEntries }) {
             </label>
           </div>
 
-          <div>
+          <div className="labor-readout">
             Labor cost % (from TimeEntries data):&nbsp;
             <span data-alert={laborPct > 35 ? 'true' : undefined}>
               {laborPct}
