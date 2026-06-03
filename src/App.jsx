@@ -1,7 +1,3 @@
-// Data strategy: import the materialized arrays directly from generateData.js.
-// generateAllData() runs once at module-load time (not per render), so every
-// tab importing from generateData.js receives the same object references.
-// App.jsx imports them here and passes as props so tabs remain pure components.
 import { checks, itemSelections, timeEntries, kitchenTimings } from './data/generateData';
 import useDashboardStore from './store/useDashboardStore';
 import Header from './components/layout/Header';
@@ -14,19 +10,21 @@ function App() {
   const activeTab = useDashboardStore(s => s.activeTab);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <div>
       <Header />
       <TabNav />
       <main>
-        {activeTab === 'revenue' && (
-          <RevenueTab checks={checks} itemSelections={itemSelections} />
-        )}
-        {activeTab === 'cost' && (
-          <CostTab checks={checks} timeEntries={timeEntries} />
-        )}
-        {activeTab === 'sales' && (
-          <SalesTab checks={checks} itemSelections={itemSelections} kitchenTimings={kitchenTimings} />
-        )}
+        <div key={activeTab}>
+          {activeTab === 'revenue' && (
+            <RevenueTab checks={checks} itemSelections={itemSelections} />
+          )}
+          {activeTab === 'cost' && (
+            <CostTab checks={checks} timeEntries={timeEntries} />
+          )}
+          {activeTab === 'sales' && (
+            <SalesTab checks={checks} itemSelections={itemSelections} kitchenTimings={kitchenTimings} />
+          )}
+        </div>
       </main>
     </div>
   );
