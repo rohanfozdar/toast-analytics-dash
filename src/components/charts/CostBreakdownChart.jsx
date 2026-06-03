@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { CHART_COLORS } from '../../lib/chartColors';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -12,23 +13,20 @@ export default function CostBreakdownChart({ waterfall }) {
 
   const data = useMemo(() => ({
     labels: ['Food Cost', 'Labor Cost', 'Fixed Costs', 'Variable Costs'],
-    datasets: [
-      {
-        data: [foodCostAmt, laborCostAmt, fixedCostAmt, variableCostAmt],
-        backgroundColor: [
-          '--chart-color-1',
-          '--chart-color-2',
-          '--chart-color-3',
-          '--chart-color-4',
-        ],
-      },
-    ],
+    datasets: [{
+      data: [foodCostAmt, laborCostAmt, fixedCostAmt, variableCostAmt],
+      backgroundColor: [CHART_COLORS[1], CHART_COLORS[2], CHART_COLORS[3], CHART_COLORS[4]],
+      borderColor: '#FEFCFA',
+      borderWidth: 2,
+    }],
   }), [foodCostAmt, laborCostAmt, fixedCostAmt, variableCostAmt]);
 
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    cutout: '60%',
     plugins: {
+      legend: { position: 'right' },
       tooltip: {
         callbacks: {
           label: ctx => {
@@ -42,8 +40,11 @@ export default function CostBreakdownChart({ waterfall }) {
   };
 
   return (
-    <div data-chart="cost-breakdown" style={{ height: '280px' }}>
-      <Doughnut data={data} options={options} />
+    <div data-chart="cost-breakdown">
+      <h2 className="chart-section-title">Cost Breakdown</h2>
+      <div className="chart-canvas" style={{ height: '280px' }}>
+        <Doughnut data={data} options={options} />
+      </div>
     </div>
   );
 }
