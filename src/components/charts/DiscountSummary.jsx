@@ -11,6 +11,7 @@ import {
 } from 'chart.js';
 import { getDiscountSummary, getVoidSummary } from '../../lib/calculations';
 import KpiCard from '../shared/KpiCard';
+import { CHART_COLORS } from '../../lib/chartColors';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -37,43 +38,28 @@ export default function DiscountSummary({ checks, itemSelections, start, end }) 
 
   const barData = {
     labels: byReason.map(r => r.reason),
-    datasets: [
-      {
-        label: 'Discount Amount by Reason',
-        data: byReason.map(r => r.amount),
-        backgroundColor: '--chart-color-1',
-      },
-    ],
+    datasets: [{
+      label: 'Discount Amount by Reason',
+      data: byReason.map(r => r.amount),
+      backgroundColor: CHART_COLORS[1],
+      borderRadius: 4,
+    }],
   };
 
   const barOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: ctx => currencyFmt(ctx.parsed.y),
-        },
-      },
-    },
-    scales: {
-      y: {
-        ticks: { callback: v => currencyFmt(v) },
-      },
-    },
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => currencyFmt(ctx.parsed.y) } } },
+    scales: { y: { ticks: { callback: v => currencyFmt(v) } } },
   };
 
   return (
     <div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
-        <KpiCard
-          label="Total Discount Amount"
-          value={currencyFmt(totalDiscountAmt)}
-        />
-        <KpiCard
-          label="Discounted Checks"
-          value={discountedCheckCount.toLocaleString()}
-        />
+      <h2 className="chart-section-title" style={{ marginBottom: 0 }}>Discounts &amp; Voids</h2>
+
+      <div className="kpi-grid-3">
+        <KpiCard label="Total Discount Amount" value={currencyFmt(totalDiscountAmt)} />
+        <KpiCard label="Discounted Checks" value={discountedCheckCount.toLocaleString()} />
         <div data-alert={discountAlertLevel}>
           <KpiCard
             label="Discount % of Gross Revenue"
@@ -82,20 +68,18 @@ export default function DiscountSummary({ checks, itemSelections, start, end }) 
         </div>
       </div>
 
-      <div data-chart="discount-by-reason" style={{ height: '280px' }}>
-        <Bar data={barData} options={barOptions} />
+      <div data-chart="discount-by-reason" style={{ marginTop: '24px' }}>
+        <h2 className="chart-section-title">Discount Amount by Reason</h2>
+        <div className="chart-canvas" style={{ height: '280px' }}>
+          <Bar data={barData} options={barOptions} />
+        </div>
       </div>
 
       <div data-role="void-summary">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
-          <KpiCard
-            label="Total Void Amount"
-            value={currencyFmt(voidStats.totalVoidAmt)}
-          />
-          <KpiCard
-            label="Total Void Count"
-            value={voidStats.totalVoidCount.toLocaleString()}
-          />
+        <h3>Voids</h3>
+        <div className="kpi-grid-2">
+          <KpiCard label="Total Void Amount" value={currencyFmt(voidStats.totalVoidAmt)} />
+          <KpiCard label="Total Void Count" value={voidStats.totalVoidCount.toLocaleString()} />
         </div>
       </div>
     </div>
