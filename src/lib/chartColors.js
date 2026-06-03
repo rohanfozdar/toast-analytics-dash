@@ -11,12 +11,12 @@ function resolveVar(name, fallback) {
 }
 
 export const CHART_COLORS = {
-  1: resolveVar('--chart-color-1', '#C25B3F'),
-  2: resolveVar('--chart-color-2', '#4A7C59'),
-  3: resolveVar('--chart-color-3', '#D4936A'),
-  4: resolveVar('--chart-color-4', '#6889A8'),
-  5: resolveVar('--chart-color-5', '#9A7BB5'),
-  6: resolveVar('--chart-color-6', '#C9A84C'),
+  1: resolveVar('--chart-color-1', '#064E3B'),
+  2: resolveVar('--chart-color-2', '#0D7A5F'),
+  3: resolveVar('--chart-color-3', '#C9A84C'),
+  4: resolveVar('--chart-color-4', '#2C8C7B'),
+  5: resolveVar('--chart-color-5', '#8A6F1F'),
+  6: resolveVar('--chart-color-6', '#A8321F'),
 };
 
 export const CHART_COLOR_LIST = [
@@ -24,8 +24,8 @@ export const CHART_COLOR_LIST = [
   CHART_COLORS[4], CHART_COLORS[5], CHART_COLORS[6],
 ];
 
-export const CHART_TEXT = resolveVar('--color-text-secondary', '#6B5E54');
-export const CHART_GRID = resolveVar('--color-border-subtle', '#F0EAE3');
+export const CHART_TEXT = resolveVar('--color-text-secondary', '#4A5C54');
+export const CHART_GRID = resolveVar('--color-border-subtle', '#ECE4CC');
 
 // Global Chart.js defaults — call once at app boot.
 export function applyChartDefaults(ChartJS) {
