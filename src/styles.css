@@ -62,25 +62,23 @@ body {
   font-size: var(--text-base);
   color: var(--color-text-primary);
   background-color: var(--color-bg);
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent,
-    transparent 27px,
-    rgba(42, 33, 27, 0.028) 28px
-  );
-  background-attachment: local;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 0% 0%, rgba(6, 78, 59, 0.07), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 100% 100%, rgba(201, 168, 76, 0.10), transparent 60%);
+  background-attachment: fixed;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
   color: var(--color-text-primary);
   margin: 0;
-  line-height: 1.2;
+  line-height: 1.15;
   font-weight: 600;
+  letter-spacing: -0.015em;
 }
 
 button { font-family: var(--font-sans); cursor: pointer; }
@@ -90,17 +88,17 @@ table { border-collapse: collapse; }
 
 /* ---------- Layout shell ---------- */
 #root > div {
-  max-width: 1280px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 48px;
 }
 @media (max-width: 1023px) {
-  #root > div { padding: 0 16px; }
+  #root > div { padding: 0 20px; }
 }
 
 main {
-  padding-top: 32px;
-  padding-bottom: 48px;
+  padding-top: 56px;
+  padding-bottom: 96px;
 }
 
 /* ---------- Header ---------- */
@@ -108,7 +106,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  height: 88px;
   border-bottom: 1px solid var(--color-border);
   gap: 24px;
 }
@@ -116,51 +114,55 @@ header h1 {
   font-family: var(--font-display);
   font-size: var(--text-h1);
   font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  color: var(--color-primary);
 }
 
 /* ---------- Tab nav (underline) ---------- */
 nav:has(> button[aria-pressed]) {
   display: flex;
-  gap: 4px;
+  gap: 8px;
   border-bottom: 1px solid var(--color-border);
+  padding-top: 8px;
 }
 nav > button[aria-pressed] {
   background: none;
   border: none;
-  border-bottom: 3px solid transparent;
-  padding: 14px 20px;
+  border-bottom: 2px solid transparent;
+  padding: 18px 4px;
+  margin-right: 28px;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: var(--text-tab);
-  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-text-muted);
   margin-bottom: -1px;
   transition: color 120ms ease, border-color 120ms ease;
 }
 nav > button[aria-pressed]:hover { color: var(--color-primary); }
 nav > button[aria-pressed="true"] {
   color: var(--color-primary);
-  border-bottom-color: var(--color-primary);
+  border-bottom-color: var(--color-accent);
 }
 
 /* ---------- Tab content fade ---------- */
 @keyframes fadeTab {
-  from { opacity: 0; transform: translateY(4px); }
+  from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-main > div { animation: fadeTab 180ms ease-out; }
+main > div { animation: fadeTab 220ms ease-out; }
 
-/* ---------- Layout helpers within tabs ---------- */
-main > div { display: flex; flex-direction: column; gap: 24px; }
+/* ---------- Layout helpers within tabs — generous full-width section rhythm ---------- */
+main > div { display: flex; flex-direction: column; gap: 56px; }
 
 /* ---------- Chart card shell ---------- */
 [data-chart] {
-  background: var(--color-surface);
+  background: var(--color-surface-raised);
   border: 1px solid var(--color-border);
-  border-radius: 10px;
-  padding: 20px 20px 16px;
-  box-shadow: 0 1px 3px rgba(42, 33, 27, 0.06);
+  border-radius: 16px;
+  padding: 32px 32px 24px;
+  box-shadow: 0 1px 2px rgba(13, 42, 34, 0.04), 0 8px 24px -12px rgba(13, 42, 34, 0.10);
   position: relative;
 }
 .chart-section-title {
@@ -168,8 +170,8 @@ main > div { display: flex; flex-direction: column; gap: 24px; }
   font-size: var(--text-h2);
   font-weight: 600;
   color: var(--color-text-primary);
-  margin: 0 0 16px;
-  letter-spacing: -0.005em;
+  margin: 0 0 24px;
+  letter-spacing: -0.015em;
 }
 .chart-canvas { position: relative; }
 
@@ -177,51 +179,52 @@ main > div { display: flex; flex-direction: column; gap: 24px; }
 .kpi-grid-4 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  gap: 24px;
 }
 .kpi-grid-3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 24px;
 }
 .kpi-grid-2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  gap: 24px;
 }
 .kpi-grid-auto {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 24px;
 }
 @media (max-width: 900px) {
   .kpi-grid-4 { grid-template-columns: repeat(2, 1fr); }
   .kpi-grid-3 { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* The KpiCard root is a bare div produced by KpiCard.jsx —
-   it has no class hook, only optional data-sentiment. Style any direct
-   div child of a kpi-grid as a card. */
+/* KpiCard cards */
 .kpi-grid-4 > div,
 .kpi-grid-3 > div,
 .kpi-grid-2 > div,
 .kpi-grid-auto > div,
 [data-role="void-summary"] > div > div {
-  background: var(--color-surface);
+  background: var(--color-surface-raised);
   border: 1px solid var(--color-border);
-  border-radius: 10px;
-  padding: 18px 20px;
+  border-radius: 14px;
+  padding: 28px 28px;
   display: flex;
   flex-direction: column;
-  transition: box-shadow 150ms ease, transform 100ms ease;
+  box-shadow: 0 1px 2px rgba(13, 42, 34, 0.04);
+  transition: box-shadow 180ms ease, transform 150ms ease, border-color 180ms ease;
 }
 .kpi-grid-4 > div:hover,
 .kpi-grid-3 > div:hover,
 .kpi-grid-2 > div:hover,
 .kpi-grid-auto > div:hover {
-  box-shadow: 0 4px 12px rgba(42, 33, 27, 0.10);
-  transform: translateY(-1px);
+  box-shadow: 0 8px 24px -8px rgba(6, 78, 59, 0.18);
+  transform: translateY(-2px);
+  border-color: var(--color-primary);
 }
+
 
 /* KpiCard internals: label, value, delta, source label
    (KpiCard renders <div>label</div><div>value</div>[delta][source]) */
