@@ -10,6 +10,7 @@ import {
   Legend,
 } from 'chart.js';
 import { getPeriodComparison } from '../../lib/calculations';
+import { CHART_COLORS } from '../../lib/chartColors';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -22,7 +23,6 @@ const MODES = [
 const currencyFmt = v =>
   v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
-// Aggregate daily data into weekly buckets
 function byWeek(dayData) {
   const weeks = [];
   for (let i = 0; i < dayData.length; i += 7) {
@@ -32,7 +32,6 @@ function byWeek(dayData) {
   return weeks;
 }
 
-// Aggregate daily data into monthly buckets (calendar month, YYYY-MM key)
 function byMonth(dayData) {
   const months = {};
   const order = [];
@@ -46,14 +45,12 @@ function byMonth(dayData) {
 
 export default function PeriodComparisonChart({ checks }) {
   const [mode, setMode] = useState('week');
-
   const activeMode = MODES.find(m => m.id === mode);
 
   const { labels, currentValues, priorValues } = useMemo(() => {
     const { current, prior } = getPeriodComparison(checks, activeMode.preset);
 
     if (mode === 'week') {
-      // X axis = individual days
       const len = Math.max(current.length, prior.length);
       return {
         labels: Array.from({ length: len }, (_, i) => `Day ${i + 1}`),
@@ -61,9 +58,7 @@ export default function PeriodComparisonChart({ checks }) {
         priorValues: prior.map(d => d.netSales),
       };
     }
-
     if (mode === 'month') {
-      // X axis = weeks within the month
       const cAgg = byWeek(current);
       const pAgg = byWeek(prior);
       const len = Math.max(cAgg.length, pAgg.length);
@@ -73,8 +68,6 @@ export default function PeriodComparisonChart({ checks }) {
         priorValues: pAgg,
       };
     }
-
-    // year mode — X axis = calendar months
     const cAgg = byMonth(current);
     const pAgg = byMonth(prior);
     const len = Math.max(cAgg.length, pAgg.length);
@@ -88,38 +81,21 @@ export default function PeriodComparisonChart({ checks }) {
   const chartData = {
     labels,
     datasets: [
-      {
-        label: 'Current',
-        data: currentValues,
-        backgroundColor: '--chart-color-1',
-      },
-      {
-        label: 'Prior',
-        data: priorValues,
-        backgroundColor: '--chart-color-2',
-      },
+      { label: 'Current', data: currentValues, backgroundColor: CHART_COLORS[1], borderRadius: 4 },
+      { label: 'Prior',   data: priorValues,   backgroundColor: CHART_COLORS[2], borderRadius: 4 },
     ],
   };
 
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: ctx => currencyFmt(ctx.parsed.y),
-        },
-      },
-    },
-    scales: {
-      y: {
-        ticks: { callback: v => currencyFmt(v) },
-      },
-    },
+    plugins: { tooltip: { callbacks: { label: ctx => currencyFmt(ctx.parsed.y) } } },
+    scales: { y: { ticks: { callback: v => currencyFmt(v) } } },
   };
 
   return (
     <div data-chart="period-comparison">
+      <h2 className="chart-section-title">Period Comparison</h2>
       <div>
         {MODES.map(m => (
           <button
@@ -132,7 +108,7 @@ export default function PeriodComparisonChart({ checks }) {
           </button>
         ))}
       </div>
-      <div style={{ height: '280px' }}>
+      <div className="chart-canvas" style={{ height: '280px' }}>
         <Bar data={chartData} options={options} />
       </div>
     </div>
