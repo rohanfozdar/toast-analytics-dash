@@ -135,6 +135,7 @@ export default function MenuPerformanceTable({ itemSelections, checks, start, en
           })}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
