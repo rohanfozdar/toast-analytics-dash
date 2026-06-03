@@ -23,7 +23,7 @@ export default function RevenueTab({ checks, itemSelections }) {
 
   return (
     <div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
+      <div className="kpi-grid-4">
         <KpiCard
           label="Total Net Sales"
           value={totalNetSales.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
