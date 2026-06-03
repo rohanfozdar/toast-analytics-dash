@@ -1,25 +1,13 @@
 import { useMemo } from 'react';
 import { Doughnut } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { getDiningChannelSplit } from '../../lib/calculations';
+import { CHART_COLOR_LIST } from '../../lib/chartColors';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const currencyFmt = v =>
   v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-
-const CHART_COLORS = [
-  '--chart-color-1',
-  '--chart-color-2',
-  '--chart-color-3',
-  '--chart-color-4',
-  '--chart-color-5',
-];
 
 export default function DiningChannelChart({ itemSelections, checks, start, end }) {
   const channelData = useMemo(
@@ -29,18 +17,20 @@ export default function DiningChannelChart({ itemSelections, checks, start, end 
 
   const data = {
     labels: channelData.map(d => d.diningOption),
-    datasets: [
-      {
-        data: channelData.map(d => d.netRevenue),
-        backgroundColor: channelData.map((_, i) => CHART_COLORS[i % CHART_COLORS.length]),
-      },
-    ],
+    datasets: [{
+      data: channelData.map(d => d.netRevenue),
+      backgroundColor: channelData.map((_, i) => CHART_COLOR_LIST[i % CHART_COLOR_LIST.length]),
+      borderColor: '#FEFCFA',
+      borderWidth: 2,
+    }],
   };
 
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    cutout: '60%',
     plugins: {
+      legend: { position: 'right' },
       tooltip: {
         callbacks: {
           label: ctx => {
@@ -54,8 +44,11 @@ export default function DiningChannelChart({ itemSelections, checks, start, end 
 
   return (
     <div>
-      <div data-chart="dining-channel" style={{ height: '280px' }}>
-        <Doughnut data={data} options={options} />
+      <div data-chart="dining-channel">
+        <h2 className="chart-section-title">Revenue by Dining Channel</h2>
+        <div className="chart-canvas" style={{ height: '280px' }}>
+          <Doughnut data={data} options={options} />
+        </div>
       </div>
 
       <table>
