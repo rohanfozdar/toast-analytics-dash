@@ -11,6 +11,7 @@ import {
 } from 'chart.js';
 import { getKitchenFulfillmentStats } from '../../lib/calculations';
 import KpiCard from '../shared/KpiCard';
+import { CHART_COLORS } from '../../lib/chartColors';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -29,39 +30,27 @@ export default function KitchenFulfillmentChart({ kitchenTimings, start, end }) 
 
   const barData = {
     labels: BUCKET_LABELS,
-    datasets: [
-      {
-        label: 'Ticket Count',
-        data: BUCKET_KEYS.map(k => histogram[k]),
-        backgroundColor: '--chart-color-1',
-      },
-    ],
+    datasets: [{
+      label: 'Ticket Count',
+      data: BUCKET_KEYS.map(k => histogram[k]),
+      backgroundColor: CHART_COLORS[1],
+      borderRadius: 4,
+    }],
   };
 
   const barOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: ctx => `${ctx.parsed.y} tickets`,
-        },
-      },
-    },
-    scales: {
-      y: {
-        ticks: { callback: v => v },
-      },
-    },
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `${ctx.parsed.y} tickets` } } },
+    scales: { y: { ticks: { callback: v => v } } },
   };
 
   return (
     <div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '1rem' }}>
-        <KpiCard
-          label="Avg Kitchen Time (All)"
-          value={minFmt(avgMinutes)}
-        />
+      <h2 className="chart-section-title" style={{ marginBottom: 0 }}>Kitchen Fulfillment Times</h2>
+
+      <div className="kpi-grid-auto">
+        <KpiCard label="Avg Kitchen Time (All)" value={minFmt(avgMinutes)} />
         {byDiningOption.map(opt => (
           <KpiCard
             key={opt.diningOption}
@@ -71,8 +60,11 @@ export default function KitchenFulfillmentChart({ kitchenTimings, start, end }) 
         ))}
       </div>
 
-      <div data-chart="kitchen-fulfillment" style={{ height: '280px' }}>
-        <Bar data={barData} options={barOptions} />
+      <div data-chart="kitchen-fulfillment" style={{ marginTop: '24px' }}>
+        <h2 className="chart-section-title">Ticket Distribution</h2>
+        <div className="chart-canvas" style={{ height: '280px' }}>
+          <Bar data={barData} options={barOptions} />
+        </div>
       </div>
 
       <div data-role="kitchen-notice">
