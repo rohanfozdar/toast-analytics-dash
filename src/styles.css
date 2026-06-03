@@ -1,0 +1,696 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  /* Color tokens */
+  --color-bg: #FAF7F4;
+  --color-surface: #FEFCFA;
+  --color-surface-raised: #FFFFFF;
+  --color-border: #E8E0D8;
+  --color-border-subtle: #F0EAE3;
+
+  --color-primary: #C25B3F;
+  --color-primary-hover: #A84A30;
+  --color-primary-tint: #FDF0EC;
+
+  --color-positive: #2E7D52;
+  --color-positive-tint: #EBF5EF;
+  --color-negative: #B33A3A;
+  --color-negative-tint: #FBEAEA;
+  --color-caution: #C97B22;
+  --color-caution-tint: #FDF3E3;
+  --color-high-alert: #9B2020;
+  --color-high-alert-tint: #F8E3E3;
+
+  --color-text-primary: #2A211B;
+  --color-text-secondary: #6B5E54;
+  --color-text-muted: #9C8E84;
+  --color-text-on-accent: #FFFFFF;
+
+  /* Chart palette (also consumed by JS via getComputedStyle in chartColors.js) */
+  --chart-color-1: #C25B3F;
+  --chart-color-2: #4A7C59;
+  --chart-color-3: #D4936A;
+  --chart-color-4: #6889A8;
+  --chart-color-5: #9A7BB5;
+  --chart-color-6: #C9A84C;
+  --chart-positive: #2E7D52;
+  --chart-negative: #B33A3A;
+
+  /* Type scale */
+  --text-xs: 11px;
+  --text-sm: 13px;
+  --text-base: 15px;
+  --text-lg: 18px;
+  --text-kpi: 32px;
+  --text-h2: 20px;
+  --text-h1: 24px;
+  --text-tab: 15px;
+
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+  --font-display: 'Fraunces', Georgia, serif;
+}
+
+/* ---------- Reset / base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body, #root { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 27px,
+    rgba(42, 33, 27, 0.028) 28px
+  );
+  background-attachment: local;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+button { font-family: var(--font-sans); cursor: pointer; }
+input { font-family: var(--font-sans); color: var(--color-text-primary); }
+input::placeholder { color: var(--color-text-muted); }
+table { border-collapse: collapse; }
+
+/* ---------- Layout shell ---------- */
+#root > div {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+@media (max-width: 1023px) {
+  #root > div { padding: 0 16px; }
+}
+
+main {
+  padding-top: 32px;
+  padding-bottom: 48px;
+}
+
+/* ---------- Header ---------- */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  border-bottom: 1px solid var(--color-border);
+  gap: 24px;
+}
+header h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-h1);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
+}
+
+/* ---------- Tab nav (underline) ---------- */
+nav:has(> button[aria-pressed]) {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--color-border);
+}
+nav > button[aria-pressed] {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 14px 20px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-tab);
+  color: var(--color-text-secondary);
+  margin-bottom: -1px;
+  transition: color 120ms ease, border-color 120ms ease;
+}
+nav > button[aria-pressed]:hover { color: var(--color-primary); }
+nav > button[aria-pressed="true"] {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+/* ---------- Tab content fade ---------- */
+@keyframes fadeTab {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+main > div { animation: fadeTab 180ms ease-out; }
+
+/* ---------- Layout helpers within tabs ---------- */
+main > div { display: flex; flex-direction: column; gap: 24px; }
+
+/* ---------- Chart card shell ---------- */
+[data-chart] {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 20px 20px 16px;
+  box-shadow: 0 1px 3px rgba(42, 33, 27, 0.06);
+  position: relative;
+}
+.chart-section-title {
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 16px;
+  letter-spacing: -0.005em;
+}
+.chart-canvas { position: relative; }
+
+/* ---------- KpiCard ---------- */
+.kpi-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.kpi-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.kpi-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.kpi-grid-auto {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+@media (max-width: 900px) {
+  .kpi-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .kpi-grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* The KpiCard root is a bare div produced by KpiCard.jsx —
+   it has no class hook, only optional data-sentiment. Style any direct
+   div child of a kpi-grid as a card. */
+.kpi-grid-4 > div,
+.kpi-grid-3 > div,
+.kpi-grid-2 > div,
+.kpi-grid-auto > div,
+[data-role="void-summary"] > div > div {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 150ms ease, transform 100ms ease;
+}
+.kpi-grid-4 > div:hover,
+.kpi-grid-3 > div:hover,
+.kpi-grid-2 > div:hover,
+.kpi-grid-auto > div:hover {
+  box-shadow: 0 4px 12px rgba(42, 33, 27, 0.10);
+  transform: translateY(-1px);
+}
+
+/* KpiCard internals: label, value, delta, source label
+   (KpiCard renders <div>label</div><div>value</div>[delta][source]) */
+.kpi-grid-4 > div > div:nth-child(1),
+.kpi-grid-3 > div > div:nth-child(1),
+.kpi-grid-2 > div > div:nth-child(1),
+.kpi-grid-auto > div > div:nth-child(1),
+[data-role="void-summary"] > div > div > div:nth-child(1) {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+  letter-spacing: 0.01em;
+}
+.kpi-grid-4 > div > div:nth-child(2),
+.kpi-grid-3 > div > div:nth-child(2),
+.kpi-grid-2 > div > div:nth-child(2),
+.kpi-grid-auto > div > div:nth-child(2),
+[data-role="void-summary"] > div > div > div:nth-child(2) {
+  font-family: var(--font-display);
+  font-size: var(--text-kpi);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sentiment treatments */
+[data-sentiment] { transition: box-shadow 150ms ease, transform 100ms ease; }
+[data-sentiment="positive"] {
+  border-left: 3px solid var(--color-positive) !important;
+  background: var(--color-positive-tint) !important;
+}
+[data-sentiment="negative"] {
+  border-left: 3px solid var(--color-negative) !important;
+  background: var(--color-negative-tint) !important;
+}
+[data-sentiment="neutral"] {
+  border-left: 3px solid var(--color-border) !important;
+}
+
+/* Delta row */
+[data-delta-direction] {
+  font: 500 13px/1 'DM Sans', sans-serif;
+  margin-top: 8px;
+}
+[data-delta-direction="up"]   { color: var(--color-positive); }
+[data-delta-direction="down"] { color: var(--color-negative); }
+
+/* Data source attribution inside a KpiCard */
+.kpi-grid-4 > div > div:nth-child(n+3):not([data-delta-direction]),
+.kpi-grid-3 > div > div:nth-child(n+3):not([data-delta-direction]),
+.kpi-grid-2 > div > div:nth-child(n+3):not([data-delta-direction]),
+.kpi-grid-auto > div > div:nth-child(n+3):not([data-delta-direction]) {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-top: 6px;
+}
+
+/* ---------- DataSourceNote ---------- */
+[data-role="source-note"] {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border-subtle);
+  font-family: var(--font-sans);
+}
+
+/* ---------- data-active buttons (segmented control + presets) ---------- */
+button[data-active] {
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+button[data-active]:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+button[data-active="true"] {
+  background: var(--color-primary);
+  color: var(--color-text-on-accent);
+  border-color: var(--color-primary);
+}
+button[data-active="true"]:hover {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+  color: var(--color-text-on-accent);
+}
+
+/* PeriodComparisonChart mode row — segmented look */
+[data-chart="period-comparison"] > div:first-child {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+/* ---------- DateRangePicker ---------- */
+[data-role="date-picker"] {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 6px 12px;
+}
+[data-role="date-picker"] > div { display: flex; align-items: center; gap: 6px; }
+[data-role="date-picker"] label {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+[data-role="date-picker"] input[type="date"] {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+}
+[data-role="date-picker"] input[type="date"]:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-tint);
+}
+
+/* ---------- Notice blocks ---------- */
+[data-role="cost-notice"] {
+  background: var(--color-caution-tint);
+  border-left: 4px solid var(--color-caution);
+  border-radius: 0 6px 6px 0;
+  padding: 12px 16px;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+[data-role="cost-notice"] p { margin: 0 0 6px; }
+[data-role="cost-notice"] p:last-child { margin-bottom: 0; }
+
+[data-role="channel-notice"] {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-caution);
+  border-radius: 0 6px 6px 0;
+  padding: 10px 14px;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin-top: 12px;
+}
+
+[data-role="kitchen-notice"] {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-style: italic;
+  line-height: 1.55;
+  margin-top: 12px;
+  padding: 0 4px;
+}
+
+/* ---------- Tables ---------- */
+[data-role="labor-table"],
+[data-role="menu-table"] {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  background: var(--color-surface);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+[data-role="labor-table"] thead th,
+[data-role="menu-table"] thead th {
+  background: var(--color-bg);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+[data-role="labor-table"] tbody td,
+[data-role="menu-table"] tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+[data-role="labor-table"] tbody tr:last-child td,
+[data-role="menu-table"] tbody tr:last-child td { border-bottom: none; }
+
+/* Labor table alert row */
+[data-role="labor-table"] tbody tr[data-alert="true"] {
+  background: var(--color-caution-tint);
+}
+[data-role="labor-table"] tbody tr[data-alert="true"] td:first-child {
+  border-left: 3px solid var(--color-caution);
+}
+
+/* Menu table sortable headers + alert cells */
+[data-sortable="true"] th { cursor: pointer; user-select: none; transition: color 120ms ease; }
+[data-sortable="true"] th:hover { color: var(--color-primary); }
+[data-role="menu-table"] tbody td[data-alert="true"] {
+  background: var(--color-caution-tint);
+  color: var(--color-caution);
+  font-weight: 600;
+}
+/* Food-cost inline input */
+[data-role="menu-table"] tbody td input[type="number"] {
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  background: transparent;
+  font-size: var(--text-sm);
+  min-width: 90px;
+  padding: 4px 0;
+  color: var(--color-text-primary);
+  outline: none;
+  font-variant-numeric: tabular-nums;
+}
+[data-role="menu-table"] tbody td input[type="number"]:focus {
+  border-bottom-color: var(--color-primary);
+  box-shadow: 0 1px 0 var(--color-primary);
+}
+/* Last column (Margin %) — positive = green */
+[data-role="menu-table"] tbody td:last-child { font-weight: 600; color: var(--color-positive); }
+
+/* Dining channel summary table (no data-role, sibling of dining-channel chart) */
+[data-chart="dining-channel"] + table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 16px;
+}
+[data-chart="dining-channel"] + table thead th {
+  background: var(--color-bg);
+  font-weight: 600;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+[data-chart="dining-channel"] + table tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  font-variant-numeric: tabular-nums;
+}
+[data-chart="dining-channel"] + table tbody tr:last-child td { border-bottom: none; }
+
+/* ---------- CostInputPanel ---------- */
+.cost-panel-card {
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-surface);
+  padding: 20px;
+}
+.cost-toggle {
+  background: none;
+  border: none;
+  font: 600 14px/1 var(--font-sans);
+  color: var(--color-text-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+}
+.cost-toggle .chevron {
+  display: inline-block;
+  color: var(--color-primary);
+  transition: transform 200ms ease;
+  font-size: 12px;
+}
+.cost-toggle[aria-expanded="false"] .chevron { transform: rotate(-90deg); }
+.cost-panel-body {
+  margin-top: 16px;
+  transition: opacity 200ms ease;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.cost-panel-body > div { display: flex; align-items: center; }
+.cost-panel-body label {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.cost-panel-body input[type="number"] {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: var(--text-sm);
+  width: 100px;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
+}
+.cost-panel-body input[type="number"]:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-tint);
+}
+.labor-readout {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border-subtle);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+.labor-readout span[data-alert="true"] {
+  color: var(--color-negative);
+  font-weight: 600;
+}
+.labor-readout span[data-alert="true"]::before {
+  content: "⚠ ";
+  margin-right: 2px;
+}
+
+/* ---------- DiscountSummary alert outline ---------- */
+[data-alert="caution"] {
+  outline: 2px solid var(--color-caution);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+[data-alert="caution"] > div { background: var(--color-caution-tint) !important; }
+[data-alert="high"] {
+  outline: 2px solid var(--color-high-alert);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+[data-alert="high"] > div { background: var(--color-high-alert-tint) !important; }
+
+/* ---------- Void summary block ---------- */
+[data-role="void-summary"] {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 24px;
+}
+[data-role="void-summary"] h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 600;
+  margin: 0 0 16px;
+  color: var(--color-text-primary);
+}
+
+/* ---------- Margin waterfall ---------- */
+[data-chart="margin-waterfall"] {
+  min-height: 300px;
+}
+[data-chart="margin-waterfall"] [data-category] {
+  margin-bottom: 6px;
+}
+[data-chart="margin-waterfall"] .waterfall-label,
+[data-chart="margin-waterfall"] [data-category] > div:first-child {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+[data-chart="margin-waterfall"] [data-category] > div:last-child {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+[data-category="revenue"] > div:first-child,
+[data-category="revenue"] > div:last-child {
+  font-weight: 600;
+  color: var(--color-text-primary) !important;
+}
+[data-category="net-profit"] > div:first-child,
+[data-category="net-profit"] > div:last-child {
+  font-weight: 600;
+  color: var(--color-positive) !important;
+}
+
+/* ---------- Coming soon overlay ---------- */
+[data-hidden="true"] {
+  opacity: 0.4;
+  filter: blur(2px);
+  pointer-events: none;
+  position: relative;
+  user-select: none;
+}
+[data-hidden="true"]::after {
+  content: "Coming soon";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 500 12px/1 var(--font-sans);
+  color: var(--color-text-secondary);
+  background: transparent;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  pointer-events: none;
+  filter: blur(0);
+  opacity: 1;
+}
+
+/* ---------- Period cards (Cost tab margin stats) ---------- */
+.period-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+[data-period="weekly"]  { border-top: 3px solid var(--chart-color-2); }
+[data-period="monthly"] { border-top: 3px solid var(--chart-color-4); }
+[data-period="yearly"]  { border-top: 3px solid var(--chart-color-6); }
+
+/* KpiCards inside period cards: lighter treatment, no extra card-in-card border */
+.period-card > div,
+.period-card > [data-hidden] > div {
+  background: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+}
+.period-card > div:hover,
+.period-card > [data-hidden] > div:hover {
+  box-shadow: none;
+  transform: none;
+}
+
+/* Make sure KpiCards directly inside period-card render label/value */
+.period-card > div > div:nth-child(1),
+.period-card > [data-hidden] > div > div:nth-child(1) {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+}
+.period-card > div > div:nth-child(2),
+.period-card > [data-hidden] > div > div:nth-child(2) {
+  font-family: var(--font-display);
+  font-size: var(--text-kpi);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Misc ---------- */
+::selection { background: var(--color-primary-tint); color: var(--color-text-primary); }
+:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; border-radius: 4px; }
