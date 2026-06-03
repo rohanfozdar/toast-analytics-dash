@@ -1,54 +1,57 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Color tokens */
-  --color-bg: #FAF7F4;
-  --color-surface: #FEFCFA;
+  /* Emerald Prestige palette */
+  --color-bg: #F5F0E0;
+  --color-surface: #FBF7EA;
   --color-surface-raised: #FFFFFF;
-  --color-border: #E8E0D8;
-  --color-border-subtle: #F0EAE3;
+  --color-border: #E2D9BD;
+  --color-border-subtle: #ECE4CC;
 
-  --color-primary: #C25B3F;
-  --color-primary-hover: #A84A30;
-  --color-primary-tint: #FDF0EC;
+  --color-primary: #064E3B;
+  --color-primary-hover: #053B2C;
+  --color-primary-tint: #E4EFE9;
+  --color-accent: #C9A84C;
+  --color-accent-hover: #B0902F;
+  --color-accent-tint: #F6ECC9;
 
-  --color-positive: #2E7D52;
-  --color-positive-tint: #EBF5EF;
-  --color-negative: #B33A3A;
-  --color-negative-tint: #FBEAEA;
-  --color-caution: #C97B22;
-  --color-caution-tint: #FDF3E3;
-  --color-high-alert: #9B2020;
-  --color-high-alert-tint: #F8E3E3;
+  --color-positive: #0D7A5F;
+  --color-positive-tint: #DCEBE3;
+  --color-negative: #A8321F;
+  --color-negative-tint: #F4E1DC;
+  --color-caution: #C9A84C;
+  --color-caution-tint: #F6ECC9;
+  --color-high-alert: #7A1D10;
+  --color-high-alert-tint: #EFD2CC;
 
-  --color-text-primary: #2A211B;
-  --color-text-secondary: #6B5E54;
-  --color-text-muted: #9C8E84;
-  --color-text-on-accent: #FFFFFF;
+  --color-text-primary: #0D2A22;
+  --color-text-secondary: #4A5C54;
+  --color-text-muted: #8A9690;
+  --color-text-on-accent: #FBF7EA;
 
-  /* Chart palette (also consumed by JS via getComputedStyle in chartColors.js) */
-  --chart-color-1: #C25B3F;
-  --chart-color-2: #4A7C59;
-  --chart-color-3: #D4936A;
-  --chart-color-4: #6889A8;
-  --chart-color-5: #9A7BB5;
-  --chart-color-6: #C9A84C;
-  --chart-positive: #2E7D52;
-  --chart-negative: #B33A3A;
+  /* Chart palette */
+  --chart-color-1: #064E3B;
+  --chart-color-2: #0D7A5F;
+  --chart-color-3: #C9A84C;
+  --chart-color-4: #2C8C7B;
+  --chart-color-5: #8A6F1F;
+  --chart-color-6: #A8321F;
+  --chart-positive: #0D7A5F;
+  --chart-negative: #A8321F;
 
-  /* Type scale */
+  /* Type scale — larger, airier */
   --text-xs: 11px;
   --text-sm: 13px;
   --text-base: 15px;
   --text-lg: 18px;
-  --text-kpi: 32px;
-  --text-h2: 20px;
-  --text-h1: 24px;
-  --text-tab: 15px;
+  --text-kpi: 40px;
+  --text-h2: 22px;
+  --text-h1: 26px;
+  --text-tab: 14px;
 
   --font-sans: 'DM Sans', system-ui, sans-serif;
-  --font-display: 'Fraunces', Georgia, serif;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
 }
 
 /* ---------- Reset / base ---------- */
