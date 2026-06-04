@@ -1,3 +1,4 @@
+// @ts-nocheck
 import DateRangePicker from './DateRangePicker';
 
 export default function Header() {

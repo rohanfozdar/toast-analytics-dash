@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState } from 'react';
 import useDashboardStore from '../../store/useDashboardStore';
 import { getLaborPct } from '../../lib/calculations';

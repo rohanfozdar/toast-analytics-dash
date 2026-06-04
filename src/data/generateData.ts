@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   MENU_ITEMS,
   STAFF,

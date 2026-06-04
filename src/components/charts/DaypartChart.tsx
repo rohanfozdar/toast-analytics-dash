@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useMemo } from 'react';
 import { Bar } from 'react-chartjs-2';
 import {

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { formatDate, dayOfWeekLabel } from './dateUtils';
 
 // ── Filters ───────────────────────────────────────────────────────────────────

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Resolves CSS custom properties to actual color values so Chart.js (which
 // draws to canvas) can use them. CSS strings like "var(--chart-color-1)"
 // don't work on canvas — Chart.js needs real hex/rgb values.

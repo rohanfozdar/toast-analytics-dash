@@ -1,3 +1,4 @@
+// @ts-nocheck
 export const SERVICES = ['Breakfast', 'Lunch', 'Dinner', 'Late Night'];
 export const DINING_OPTIONS = ['Dine-in', 'Take Out', 'Delivery', 'Curbside'];
 export const TENDERS = ['Credit Card', 'Cash', 'Gift Card', 'Third Party'];

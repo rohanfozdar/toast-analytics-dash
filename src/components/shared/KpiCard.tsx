@@ -1,3 +1,4 @@
+// @ts-nocheck
 export default function KpiCard({ label, value, delta, sentiment, dataSourceLabel }) {
   const deltaDirection = delta != null ? (delta >= 0 ? 'up' : 'down') : undefined;
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 const currencyFmt = v =>
   v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 

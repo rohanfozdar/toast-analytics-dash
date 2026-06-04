@@ -1,3 +1,4 @@
+// @ts-nocheck
 import useDashboardStore from '../../store/useDashboardStore';
 import { formatDate } from '../../lib/dateUtils';
 

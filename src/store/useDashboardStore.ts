@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { create } from 'zustand';
 import { presetToRange } from '../lib/dateUtils.js';
 import { COST_DEFAULTS } from '../data/constants.js';

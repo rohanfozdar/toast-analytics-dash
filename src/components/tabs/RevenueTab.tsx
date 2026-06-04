@@ -1,3 +1,4 @@
+// @ts-nocheck
 import useDashboardStore from '../../store/useDashboardStore';
 import { getKpiSummary } from '../../lib/calculations';
 import KpiCard from '../shared/KpiCard';

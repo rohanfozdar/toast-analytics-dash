@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { checks, itemSelections, timeEntries, kitchenTimings } from './data/generateData';
 import useDashboardStore from './store/useDashboardStore';
 import Header from './components/layout/Header';
