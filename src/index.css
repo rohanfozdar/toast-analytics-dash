@@ -1,5 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+/* shadcn semantic tokens (HSL) — mapped to Emerald Prestige palette so Tailwind utilities and shadcn primitives stay on-brand */
+@layer base {
+  :root {
+    --background: 47 56% 92%;
+    --foreground: 162 53% 11%;
+    --card: 47 67% 95%;
+    --card-foreground: 162 53% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 162 53% 11%;
+    --primary: 162 86% 16%;
+    --primary-foreground: 47 67% 95%;
+    --secondary: 47 50% 84%;
+    --secondary-foreground: 162 53% 11%;
+    --muted: 47 50% 88%;
+    --muted-foreground: 162 12% 35%;
+    --accent: 43 56% 54%;
+    --accent-foreground: 162 53% 11%;
+    --destructive: 11 70% 39%;
+    --destructive-foreground: 47 67% 95%;
+    --border: 47 39% 81%;
+    --input: 47 39% 81%;
+    --ring: 162 86% 16%;
+    --positive: 161 80% 26%;
+    --negative: 11 70% 39%;
+    --caution: 43 56% 54%;
+    --chart-1: 162 86% 16%;
+    --chart-2: 161 80% 26%;
+    --chart-3: 43 56% 54%;
+    --chart-4: 169 52% 36%;
+    --chart-5: 43 64% 33%;
+    --chart-6: 11 70% 39%;
+    --radius: 0.875rem;
+  }
+  .dark {
+    --background: 162 53% 8%;
+    --foreground: 47 67% 95%;
+    --card: 162 40% 12%;
+    --card-foreground: 47 67% 95%;
+    --popover: 162 40% 12%;
+    --popover-foreground: 47 67% 95%;
+    --primary: 43 56% 54%;
+    --primary-foreground: 162 53% 11%;
+    --secondary: 162 30% 18%;
+    --secondary-foreground: 47 67% 95%;
+    --muted: 162 30% 18%;
+    --muted-foreground: 47 20% 70%;
+    --accent: 43 56% 54%;
+    --accent-foreground: 162 53% 11%;
+    --destructive: 11 70% 50%;
+    --destructive-foreground: 47 67% 95%;
+    --border: 162 30% 22%;
+    --input: 162 30% 22%;
+    --ring: 43 56% 54%;
+  }
+  * { @apply border-border; }
+}
+
+
 
 :root {
   /* Emerald Prestige palette */
