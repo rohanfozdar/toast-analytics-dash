@@ -8,7 +8,7 @@ import {
   STATIONS,
   DISCOUNT_REASONS,
   VOID_REASONS,
-} from './constants.js';
+} from './constants';
 
 // ── Seeded PRNG (mulberry32) for reproducible data ────────────────────────────
 function mulberry32(seed) {

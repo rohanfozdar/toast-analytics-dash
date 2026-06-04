@@ -1,4 +1,4 @@
-import { formatDate, dayOfWeekLabel } from './dateUtils.js';
+import { formatDate, dayOfWeekLabel } from './dateUtils';
 
 // ── Filters ───────────────────────────────────────────────────────────────────
 
