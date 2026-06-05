@@ -161,8 +161,8 @@ table { border-collapse: collapse; }
 }
 
 main {
-  padding-top: 56px;
-  padding-bottom: 96px;
+  padding-top: 32px;
+  padding-bottom: 64px;
 }
 
 /* ---------- Header ---------- */
@@ -217,15 +217,15 @@ nav > button[aria-pressed="true"] {
 }
 main > div { animation: fadeTab 220ms ease-out; }
 
-/* ---------- Layout helpers within tabs — generous full-width section rhythm ---------- */
-main > div { display: flex; flex-direction: column; gap: 56px; }
+/* ---------- Layout helpers within tabs — even full-width section rhythm ---------- */
+main > div { display: flex; flex-direction: column; gap: 28px; }
 
 /* ---------- Chart card shell ---------- */
 [data-chart] {
   background: var(--color-surface-raised);
   border: 1px solid var(--color-border);
   border-radius: 16px;
-  padding: 32px 32px 24px;
+  padding: 24px 28px 20px;
   box-shadow: 0 1px 2px rgba(13, 42, 34, 0.04), 0 8px 24px -12px rgba(13, 42, 34, 0.10);
   position: relative;
 }
@@ -234,7 +234,7 @@ main > div { display: flex; flex-direction: column; gap: 56px; }
   font-size: var(--text-h2);
   font-weight: 600;
   color: var(--color-text-primary);
-  margin: 0 0 24px;
+  margin: 0 0 16px;
   letter-spacing: -0.015em;
 }
 .chart-canvas { position: relative; }
@@ -243,22 +243,22 @@ main > div { display: flex; flex-direction: column; gap: 56px; }
 .kpi-grid-4 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
+  gap: 16px;
 }
 .kpi-grid-3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 16px;
 }
 .kpi-grid-2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
+  gap: 16px;
 }
 .kpi-grid-auto {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 24px;
+  gap: 16px;
 }
 @media (max-width: 900px) {
   .kpi-grid-4 { grid-template-columns: repeat(2, 1fr); }
@@ -274,7 +274,7 @@ main > div { display: flex; flex-direction: column; gap: 56px; }
   background: var(--color-surface-raised);
   border: 1px solid var(--color-border);
   border-radius: 14px;
-  padding: 28px 28px;
+  padding: 20px 22px;
   display: flex;
   flex-direction: column;
   box-shadow: 0 1px 2px rgba(13, 42, 34, 0.04);
@@ -310,10 +310,10 @@ main > div { display: flex; flex-direction: column; gap: 56px; }
 .kpi-grid-auto > div > div:nth-child(2),
 [data-role="void-summary"] > div > div > div:nth-child(2) {
   font-family: var(--font-display);
-  font-size: var(--text-kpi);
+  font-size: 32px;
   font-weight: 600;
   color: var(--color-text-primary);
-  line-height: 1.1;
+  line-height: 1.15;
   font-variant-numeric: tabular-nums;
 }
 
@@ -386,12 +386,7 @@ button[data-active="true"]:hover {
   color: var(--color-text-on-accent);
 }
 
-/* PeriodComparisonChart mode row — segmented look */
-[data-chart="period-comparison"] > div:first-child {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-}
+/* PeriodComparisonChart header row spacing handled in component */
 
 /* ---------- DateRangePicker ---------- */
 [data-role="date-picker"] {
