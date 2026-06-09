@@ -691,10 +691,15 @@ button[data-active="true"]:hover {
   font-weight: 600;
   color: var(--color-text-primary) !important;
 }
-[data-category="net-profit"] > div:first-child,
-[data-category="net-profit"] > div:last-child {
+[data-category="net-profit"][data-profit-sign="positive"] > div:first-child,
+[data-category="net-profit"][data-profit-sign="positive"] > div:last-child {
   font-weight: 600;
   color: var(--color-positive) !important;
+}
+[data-category="net-profit"][data-profit-sign="negative"] > div:first-child,
+[data-category="net-profit"][data-profit-sign="negative"] > div:last-child {
+  font-weight: 600;
+  color: var(--color-negative) !important;
 }
 
 /* ---------- Coming soon overlay ---------- */
