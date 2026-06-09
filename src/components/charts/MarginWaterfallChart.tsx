@@ -34,11 +34,11 @@ export default function MarginWaterfallChart({ waterfall }) {
 
   const steps = [
     { category: 'revenue',        label: 'Revenue',         amount: revenue,         pct: 100,                 left: 0,                       width: 100,                       hidden: false, colorIdx: 0 },
-    { category: 'food-cost',      label: 'Food Cost',       amount: foodCostAmt,     pct: pctOfRev(foodCostAmt),     left: barLeft(afterFood),     width: barWidth(foodCostAmt),     hidden: true,  colorIdx: 1 },
-    { category: 'labor-cost',     label: 'Labor Cost',      amount: laborCostAmt,    pct: pctOfRev(laborCostAmt),    left: barLeft(afterLabor),    width: barWidth(laborCostAmt),    hidden: true,  colorIdx: 2 },
-    { category: 'fixed-cost',     label: 'Fixed Costs',     amount: fixedCostAmt,    pct: pctOfRev(fixedCostAmt),    left: barLeft(afterFixed),    width: barWidth(fixedCostAmt),    hidden: true,  colorIdx: 3 },
-    { category: 'variable-cost',  label: 'Variable Costs',  amount: variableCostAmt, pct: pctOfRev(variableCostAmt), left: barLeft(netProfit),     width: barWidth(variableCostAmt), hidden: true,  colorIdx: 4 },
-    { category: 'net-profit',     label: 'Net Profit',      amount: netProfit,       pct: pctOfRev(netProfit),       left: 0,                       width: barWidth(netProfit),       hidden: true,  colorIdx: 5 },
+    { category: 'food-cost',      label: 'Food Cost',       amount: foodCostAmt,     pct: pctOfRev(foodCostAmt),     left: barLeft(afterFood),     width: barWidth(foodCostAmt),     hidden: false, colorIdx: 1 },
+    { category: 'labor-cost',     label: 'Labor Cost',      amount: laborCostAmt,    pct: pctOfRev(laborCostAmt),    left: barLeft(afterLabor),    width: barWidth(laborCostAmt),    hidden: false, colorIdx: 2 },
+    { category: 'fixed-cost',     label: 'Fixed Costs',     amount: fixedCostAmt,    pct: pctOfRev(fixedCostAmt),    left: barLeft(afterFixed),    width: barWidth(fixedCostAmt),    hidden: false, colorIdx: 3 },
+    { category: 'variable-cost',  label: 'Variable Costs',  amount: variableCostAmt, pct: pctOfRev(variableCostAmt), left: barLeft(netProfit),     width: barWidth(variableCostAmt), hidden: false, colorIdx: 4 },
+    { category: 'net-profit',     label: 'Net Profit (Est.)', amount: netProfit,       pct: pctOfRev(netProfit),       left: 0,                       width: barWidth(netProfit),       hidden: false, colorIdx: 5 },
   ];
 
   return (
@@ -48,7 +48,7 @@ export default function MarginWaterfallChart({ waterfall }) {
         <div
           key={step.category}
           data-category={step.category}
-          data-hidden={step.hidden ? 'true' : undefined}
+          data-profit-sign={step.category === 'net-profit' ? (netProfit >= 0 ? 'positive' : 'negative') : undefined}
           style={{ display: 'flex', alignItems: 'center', marginBottom: '6px', height: '40px' }}
         >
           <div className="waterfall-label" style={{ width: '120px', flexShrink: 0 }}>
@@ -61,7 +61,9 @@ export default function MarginWaterfallChart({ waterfall }) {
                 left: step.left + '%',
                 width: step.width + '%',
                 height: '100%',
-                backgroundColor: COLOR_VARS[step.colorIdx],
+                backgroundColor: step.category === 'net-profit'
+                  ? (netProfit >= 0 ? 'var(--chart-positive)' : 'var(--chart-negative)')
+                  : COLOR_VARS[step.colorIdx],
                 minWidth: step.width > 0 ? '2px' : '0',
                 borderRadius: '4px',
               }}

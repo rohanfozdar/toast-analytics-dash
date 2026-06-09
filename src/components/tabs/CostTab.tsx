@@ -46,6 +46,11 @@ export default function CostTab({ checks, timeEntries }) {
       <CostInputPanel checks={checks} timeEntries={timeEntries} />
 
       <MarginWaterfallChart waterfall={waterfall} />
+      <div data-role="estimate-caveat">
+        Profit figures are estimates. Labor cost is actual (from your staff clock-in data);
+        food, fixed, and variable costs are based on the assumptions you entered above.
+        Accuracy depends on those inputs.
+      </div>
       <CostBreakdownChart waterfall={waterfall} />
 
       <table data-role="labor-table">
@@ -83,21 +88,15 @@ export default function CostTab({ checks, timeEntries }) {
       <div className="kpi-grid-3">
         <div data-period="weekly" className="period-card">
           <KpiCard label="Weekly Net Sales" value={currencyFmt(weeklyNetSales)} />
-          <div data-hidden="true">
-            <KpiCard label="Weekly Net Profit" value={currencyFmt(weeklyNetProfit)} />
-          </div>
+          <KpiCard label="Weekly Net Profit (Est.)" value={currencyFmt(weeklyNetProfit)} sentiment={weeklyNetProfit >= 0 ? 'positive' : 'negative'} />
         </div>
         <div data-period="monthly" className="period-card">
           <KpiCard label="Monthly Net Sales" value={currencyFmt(monthlyNetSales)} />
-          <div data-hidden="true">
-            <KpiCard label="Monthly Net Profit" value={currencyFmt(monthlyNetProfit)} />
-          </div>
+          <KpiCard label="Monthly Net Profit (Est.)" value={currencyFmt(monthlyNetProfit)} sentiment={monthlyNetProfit >= 0 ? 'positive' : 'negative'} />
         </div>
         <div data-period="yearly" className="period-card">
           <KpiCard label="Yearly Net Sales" value={currencyFmt(yearlyNetSales)} />
-          <div data-hidden="true">
-            <KpiCard label="Yearly Net Profit" value={currencyFmt(yearlyNetProfit)} />
-          </div>
+          <KpiCard label="Yearly Net Profit (Est.)" value={currencyFmt(yearlyNetProfit)} sentiment={yearlyNetProfit >= 0 ? 'positive' : 'negative'} />
         </div>
       </div>
 
