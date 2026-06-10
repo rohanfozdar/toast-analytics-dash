@@ -5,6 +5,7 @@ const TABS = [
   { id: 'revenue', label: 'Revenue' },
   { id: 'cost', label: 'Cost' },
   { id: 'sales', label: 'Sales' },
+  { id: 'customers', label: 'Customers' },
 ];
 
 export default function TabNav() {
