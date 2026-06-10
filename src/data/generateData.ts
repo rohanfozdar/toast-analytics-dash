@@ -9,6 +9,9 @@ import {
   STATIONS,
   DISCOUNT_REASONS,
   VOID_REASONS,
+  CARD_TYPES,
+  CARD_TYPE_WEIGHTS,
+  PROCESSING_FEE_RATE,
 } from './constants';
 
 // ── Seeded PRNG (mulberry32) for reproducible data ────────────────────────────
