@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails, modifierSelections, orderDetails } from './data/generateData';
+import { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails, modifierSelections, orderDetails, cashEntries } from './data/generateData';
 import useDashboardStore from './store/useDashboardStore';
 import Header from './components/layout/Header';
 import TabNav from './components/layout/TabNav';
@@ -20,7 +20,7 @@ function App() {
             <RevenueTab checks={checks} itemSelections={itemSelections} orderDetails={orderDetails} />
           )}
           {activeTab === 'cost' && (
-            <CostTab checks={checks} timeEntries={timeEntries} paymentDetails={paymentDetails} />
+            <CostTab checks={checks} timeEntries={timeEntries} paymentDetails={paymentDetails} cashEntries={cashEntries} />
           )}
           {activeTab === 'sales' && (
             <SalesTab

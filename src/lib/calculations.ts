@@ -543,3 +543,68 @@ export function getOrderSummary(orderDetails, checks, start, end) {
   return { orderCount, avgGuests, avgDurationMin, bySource: bySourceArr };
 }
 
+// ── Cash management ───────────────────────────────────────────────────────────
+
+export function filterCashByRange(cashEntries, start, end) {
+  return cashEntries.filter(c => c.createdDate >= start && c.createdDate <= end);
+}
+
+export function getCashSummary(cashEntries, start, end) {
+  const filtered = filterCashByRange(cashEntries, start, end);
+  let totalPayIns = 0;
+  let totalPayOuts = 0;
+
+  const byAction = {};
+  for (const c of filtered) {
+    if (!byAction[c.action]) {
+      byAction[c.action] = { action: c.action, count: 0, amount: 0 };
+    }
+    byAction[c.action].count++;
+    byAction[c.action].amount += Math.abs(c.amount);
+
+    if (c.action === 'Cash In') {
+      totalPayIns += c.amount;
+    } else if (c.action === 'Pay Out' || c.action === 'Tip Out') {
+      totalPayOuts += c.amount;
+    }
+  }
+
+  const netCashMovement = Math.round((totalPayIns - totalPayOuts) * 100) / 100;
+
+  return {
+    totalPayIns: Math.round(totalPayIns * 100) / 100,
+    totalPayOuts: Math.round(totalPayOuts * 100) / 100,
+    netCashMovement,
+    byAction: Object.values(byAction).map(a => ({
+      ...a,
+      amount: Math.round(a.amount * 100) / 100,
+    })).sort((a, b) => b.amount - a.amount),
+  };
+}
+
+export function getCashOverShort(cashEntries, checks, start, end) {
+  const filteredCash = filterCashByRange(cashEntries, start, end);
+  const filteredChecks = filterChecksByRange(checks, start, end);
+
+  // Sum cash-tender check totals
+  const cashTenderTotal = filteredChecks
+    .filter(c => c.tender === 'Cash')
+    .reduce((s, c) => s + c.total, 0);
+
+  // Sum cash drawer activity (pay-ins minus pay-outs)
+  const drawerActivity = filteredCash.reduce((s, c) => {
+    if (c.action === 'Cash In') return s + c.amount;
+    if (c.action === 'Pay Out' || c.action === 'Tip Out') return s - c.amount;
+    return s;
+  }, 0);
+
+  const overShort = Math.round((cashTenderTotal - drawerActivity) * 100) / 100;
+
+  return {
+    cashTenderTotal: Math.round(cashTenderTotal * 100) / 100,
+    drawerActivity: Math.round(drawerActivity * 100) / 100,
+    overShort,
+  };
+}
+
+

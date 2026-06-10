@@ -6,11 +6,13 @@ import {
   getLaborCostByRole,
   computeMarginWaterfall,
   getProcessingFees,
+  getCashSummary,
 } from '../../lib/calculations';
 import { getWeeksInRange } from '../../lib/dateUtils';
 import CostInputPanel from '../shared/CostInputPanel';
 import MarginWaterfallChart from '../charts/MarginWaterfallChart';
 import CostBreakdownChart from '../charts/CostBreakdownChart';
+import CashByActionChart from '../charts/CashByActionChart';
 import KpiCard from '../shared/KpiCard';
 import DataSourceNote from '../shared/DataSourceNote';
 
@@ -22,9 +24,10 @@ const round2 = v => Math.round(v * 100) / 100;
 const SOURCE_NOTE =
   'Labor costs from TimeEntries.csv (Employee, Job Title, Payable Hours, Regular Pay, ' +
   'Overtime Pay, Total Pay). Card processing fees from PaymentDetails.csv (V/MC/D Fees). ' +
+  'Cash entries from CashEntries.csv (Amount, Action, Payout Reason, Employee, Cash Drawer). ' +
   'Food, fixed, and variable costs entered manually — not available in Toast export data.';
 
-export default function CostTab({ checks, timeEntries, paymentDetails }) {
+export default function CostTab({ checks, timeEntries, paymentDetails, cashEntries }) {
   const { start, end } = useDashboardStore(s => s.dateRange);
   const costInputs = useDashboardStore(s => s.costInputs);
 
@@ -34,6 +37,7 @@ export default function CostTab({ checks, timeEntries, paymentDetails }) {
   const waterfall = computeMarginWaterfall(totalNetSales, laborCost, weeksInRange, costInputs);
   const laborByRole = getLaborCostByRole(timeEntries, start, end);
   const { totalFees: processingFees, feePctOfSales } = getProcessingFees(paymentDetails, checks, start, end);
+  const { totalPayIns, totalPayOuts, netCashMovement } = getCashSummary(cashEntries, start, end);
 
   const weeklyNetSales = weeksInRange > 0 ? round2(totalNetSales / weeksInRange) : 0;
   const monthlyNetSales = round2(weeklyNetSales * (52 / 12));
@@ -63,6 +67,20 @@ export default function CostTab({ checks, timeEntries, paymentDetails }) {
         />
       </div>
 
+      <div data-role="cash-management">
+        <h2 className="chart-section-title" style={{ marginBottom: '16px' }}>Cash Management</h2>
+        <div className="kpi-grid-3">
+          <KpiCard label="Total Pay-Ins" value={currencyFmt(totalPayIns)} />
+          <KpiCard label="Total Pay-Outs" value={currencyFmt(totalPayOuts)} />
+          <KpiCard
+            label="Net Cash Movement"
+            value={currencyFmt(netCashMovement)}
+            sentiment={netCashMovement >= 0 ? 'positive' : 'negative'}
+          />
+        </div>
+      </div>
+
+      <CashByActionChart cashEntries={cashEntries} start={start} end={end} />
 
       <table data-role="labor-table">
         <thead>
