@@ -38,6 +38,11 @@ function randNormal(mean, sd) {
   return mean + z * sd;
 }
 
+const orderRand = mulberry32(0x0ADE5);
+const orInt = (min, max) => Math.floor(orderRand() * (max - min + 1)) + min;
+const orFloat = (min, max) => orderRand() * (max - min) + min;
+const orPick = arr => arr[Math.floor(orderRand() * arr.length)];
+
 // ── Date formatting helpers ───────────────────────────────────────────────────
 function fmtCheckDate(d) {
   // MM/DD/YY
@@ -181,6 +186,7 @@ export function generateAllData() {
   const itemSelections = [];
   const kitchenTimings = [];
   const modifierSelections = [];
+  const orderDetails = [];
 
   let checkIdCounter = 1;
   let itemSelectionIdCounter = 1;
@@ -386,6 +392,38 @@ export function generateAllData() {
         table: tableNum,
         diningOption,
       });
+
+      // Order details
+      const durationOpenedToPaid = orInt(20, 90);
+      const paidAt = new Date(openedAt.getTime() + durationOpenedToPaid * 60000);
+      const orderSource = ['Delivery', 'Curbside', 'Take Out'].includes(diningOption) ? 'Online' : 'In store';
+      const voided = orderRand() < 0.005;
+      const revenueCenter = orPick(['Restaurant', 'Bar']);
+      const netSalesForTip = total - tax - discountAmt;
+      const tip = Math.round(netSalesForTip * orFloat(0.10, 0.22) * 100) / 100;
+
+      orderDetails.push({
+        orderId,
+        orderNumber: String(orderNumber),
+        checkId,
+        opened: openedAt,
+        paid: paidAt,
+        closed: paidAt,
+        server,
+        table: String(tableNum),
+        diningOptions: diningOption,
+        numGuests: tableSize,
+        discountAmount: discountAmt,
+        tax,
+        tip,
+        gratuity: 0,
+        total,
+        voided,
+        durationOpenedToPaid,
+        revenueCenter,
+        diningArea,
+        orderSource,
+      });
     }
   }
 
@@ -395,7 +433,7 @@ export function generateAllData() {
   // ── Generate payment details (SEPARATE PRNG to preserve existing seeds) ──
   const paymentDetails = generatePaymentDetails(checks);
 
-  return { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails, modifierSelections };
+  return { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails, modifierSelections, orderDetails };
 }
 
 function generatePaymentDetails(checks) {
@@ -639,4 +677,4 @@ function generateTimeEntries(today) {
   return entries;
 }
 
-export const { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails, modifierSelections } = generateAllData();
+export const { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails, modifierSelections, orderDetails } = generateAllData();
