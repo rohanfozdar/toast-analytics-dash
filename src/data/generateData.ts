@@ -639,4 +639,4 @@ function generateTimeEntries(today) {
   return entries;
 }
 
-export const { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails } = generateAllData();
+export const { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails, modifierSelections } = generateAllData();
