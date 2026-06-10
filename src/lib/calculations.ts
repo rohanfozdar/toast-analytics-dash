@@ -176,7 +176,7 @@ export function getLaborPct(timeEntries, checks, start, end) {
 
 // ── Margin waterfall ──────────────────────────────────────────────────────────
 
-export function computeMarginWaterfall(netSales, laborCost, weeksInRange, costInputs) {
+export function computeMarginWaterfall(netSales, laborCost, weeksInRange, costInputs, processingFees = 0) {
   const { foodCostPct, fixedWeeklyCost, variableCostPct } = costInputs;
 
   const foodCostAmt = Math.round(netSales * foodCostPct / 100 * 100) / 100;
@@ -189,7 +189,10 @@ export function computeMarginWaterfall(netSales, laborCost, weeksInRange, costIn
   const afterFixed = Math.round((afterLabor - fixedCostAmt) * 100) / 100;
 
   const variableCostAmt = Math.round(netSales * variableCostPct / 100 * 100) / 100;
-  const netProfit = Math.round((afterFixed - variableCostAmt) * 100) / 100;
+  const afterVariable = Math.round((afterFixed - variableCostAmt) * 100) / 100;
+
+  const processingFeeAmt = Math.round(processingFees * 100) / 100;
+  const netProfit = Math.round((afterVariable - processingFeeAmt) * 100) / 100;
 
   return {
     revenue: netSales,
@@ -200,6 +203,8 @@ export function computeMarginWaterfall(netSales, laborCost, weeksInRange, costIn
     fixedCostAmt,
     afterFixed,
     variableCostAmt,
+    afterVariable,
+    processingFeeAmt,
     netProfit,
   };
 }
