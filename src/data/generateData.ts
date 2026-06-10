@@ -271,7 +271,7 @@ export function generateAllData() {
       const total = Math.round((subtotal + tax) * 100) / 100;
 
       // Customer
-      const hasCustomer = rand() < 0.10;
+      const hasCustomer = rand() < 0.20;
       const custData = hasCustomer ? pick(CUSTOMER_POOL) : null;
 
       const checkId = `CHK-${String(checkIdCounter).padStart(6, '0')}`;
