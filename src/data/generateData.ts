@@ -274,7 +274,10 @@ export function generateAllData() {
 
       for (let ii = 0; ii < checkItems.length; ii++) {
         const menuItem = checkItems[ii];
-        const isVoid = rand() < 0.03;
+        // Some items have a higher void rate to demonstrate the alert UI
+        const highVoidItems = new Set(['Eggs Benedict', 'Ribeye Steak', 'Pasta Arrabiata']);
+        const voidChance = highVoidItems.has(menuItem.name) ? 0.075 : 0.03;
+        const isVoid = rand() < voidChance;
         const voidReason = isVoid ? pick(VOID_REASONS) : '';
         const grossPrice = menuItem.price;
         const discnt = isVoid ? 0 : perItemDiscount;
