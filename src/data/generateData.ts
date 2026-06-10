@@ -346,7 +346,119 @@ export function generateAllData() {
   // ── Generate time entries ─────────────────────────────────────────────────
   const timeEntries = generateTimeEntries(today);
 
-  return { checks, itemSelections, timeEntries, kitchenTimings };
+  // ── Generate payment details (SEPARATE PRNG to preserve existing seeds) ──
+  const paymentDetails = generatePaymentDetails(checks);
+
+  return { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails };
+}
+
+function generatePaymentDetails(checks) {
+  const payRand = mulberry32(0x9A1C0FFE);
+  const prInt = (min, max) => Math.floor(payRand() * (max - min + 1)) + min;
+  const prFloat = (min, max) => payRand() * (max - min) + min;
+  const prPick = arr => arr[Math.floor(payRand() * arr.length)];
+  const prWeighted = (arr, weights) => {
+    const total = weights.reduce((s, w) => s + w, 0);
+    let r = payRand() * total;
+    for (let i = 0; i < arr.length; i++) {
+      r -= weights[i];
+      if (r <= 0) return arr[i];
+    }
+    return arr[arr.length - 1];
+  };
+  const last4 = () => String(prInt(0, 9999)).padStart(4, '0');
+  const r2 = v => Math.round(v * 100) / 100;
+
+  const payments = [];
+  let payCounter = 1;
+
+  const fmtPayDate = d => {
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const y = d.getFullYear();
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    const ss = String(d.getSeconds()).padStart(2, '0');
+    return `${m}/${day}/${y} ${hh}:${mm}:${ss}`;
+  };
+
+  const tipRateFor = (type) => {
+    if (type === 'Cash') return prFloat(0, 0.08);
+    if (type === 'Gift Card') return 0.05;
+    return prFloat(0.15, 0.22); // Credit Card / Third Party
+  };
+
+  for (const c of checks) {
+    const netSales = r2(c.total - c.tax - c.discount);
+    const split = payRand() < 0.08 ? 2 : 1;
+    const checkNumber = c.checkId.replace(/[^0-9]/g, '').replace(/^0+/, '') || '0';
+    const paidDateStr = fmtPayDate(c.openedAt);
+    const orderDateStr = fmtPayDate(c.openedAt);
+
+    // Compute totals first to split evenly
+    const tipRate = tipRateFor(c.tender);
+    const totalTip = r2(netSales * tipRate);
+    const totalAmount = r2(c.total); // amount portion (pre-tip)
+    const grandTotal = r2(totalAmount + totalTip);
+
+    // Build N rows summing to grandTotal
+    const rowAmounts = [];
+    const rowTips = [];
+    if (split === 1) {
+      rowAmounts.push(totalAmount);
+      rowTips.push(totalTip);
+    } else {
+      const a1 = r2(totalAmount * prFloat(0.35, 0.65));
+      const a2 = r2(totalAmount - a1);
+      const t1 = r2(totalTip * prFloat(0.35, 0.65));
+      const t2 = r2(totalTip - t1);
+      rowAmounts.push(a1, a2);
+      rowTips.push(t1, t2);
+    }
+
+    for (let i = 0; i < rowAmounts.length; i++) {
+      const amount = rowAmounts[i];
+      const tip = rowTips[i];
+      const total = r2(amount + tip);
+      const type = c.tender;
+      const isCard = type === 'Credit Card';
+      const cardType = isCard ? prWeighted(CARD_TYPES, CARD_TYPE_WEIGHTS) : '';
+      const last4CardDigits = (isCard || type === 'Gift Card') ? last4() : '';
+      const vMcDFees = isCard ? r2(total * PROCESSING_FEE_RATE) : 0;
+
+      const refunded = payRand() < 0.015;
+      const refundAmount = refunded ? r2(total * prFloat(0.25, 1.0)) : 0;
+      const refundDateD = refunded
+        ? new Date(c.openedAt.getTime() + prInt(1, 7) * 86400000)
+        : null;
+      const refundDate = refundDateD ? fmtPayDate(refundDateD) : '';
+      const status = refunded ? 'Refunded' : (payRand() < 0.003 ? 'Voided' : 'Paid');
+
+      payments.push({
+        paymentId: `PAY-${String(payCounter).padStart(7, '0')}`,
+        amount,
+        tip,
+        gratuity: 0,
+        total,
+        refunded,
+        refundDate,
+        refundAmount,
+        type,
+        cardType,
+        last4CardDigits,
+        status,
+        vMcDFees,
+        checkId: c.checkId,
+        checkNumber,
+        paidDate: paidDateStr,
+        paidAt: c.openedAt,
+        orderDate: orderDateStr,
+      });
+      payCounter++;
+    }
+  }
+
+  return payments;
 }
 
 function generateTimeEntries(today) {
