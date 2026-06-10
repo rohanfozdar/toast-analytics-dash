@@ -9,18 +9,18 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const currencyFmt = v =>
   v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
-export default function CostBreakdownChart({ waterfall }) {
+export default function CostBreakdownChart({ waterfall, processingFees = 0 }) {
   const { foodCostAmt, laborCostAmt, fixedCostAmt, variableCostAmt } = waterfall;
 
   const data = useMemo(() => ({
-    labels: ['Food Cost', 'Labor Cost', 'Fixed Costs', 'Variable Costs'],
+    labels: ['Food Cost', 'Labor Cost', 'Fixed Costs', 'Variable Costs', 'Processing Fees'],
     datasets: [{
-      data: [foodCostAmt, laborCostAmt, fixedCostAmt, variableCostAmt],
-      backgroundColor: [CHART_COLORS[1], CHART_COLORS[2], CHART_COLORS[3], CHART_COLORS[4]],
+      data: [foodCostAmt, laborCostAmt, fixedCostAmt, variableCostAmt, processingFees],
+      backgroundColor: [CHART_COLORS[1], CHART_COLORS[2], CHART_COLORS[3], CHART_COLORS[4], CHART_COLORS[5]],
       borderColor: '#FEFCFA',
       borderWidth: 2,
     }],
-  }), [foodCostAmt, laborCostAmt, fixedCostAmt, variableCostAmt]);
+  }), [foodCostAmt, laborCostAmt, fixedCostAmt, variableCostAmt, processingFees]);
 
   const options = {
     responsive: true,
