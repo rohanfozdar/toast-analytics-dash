@@ -18,10 +18,12 @@ export default function MarginWaterfallChart({ waterfall }) {
     laborCostAmt,
     fixedCostAmt,
     variableCostAmt,
+    processingFeeAmt = 0,
     netProfit,
     afterFood,
     afterLabor,
     afterFixed,
+    afterVariable,
   } = waterfall;
 
   const pctOfRev = amt =>
@@ -32,13 +34,16 @@ export default function MarginWaterfallChart({ waterfall }) {
   const barWidth = amt =>
     revenue > 0 ? Math.max(0, Math.min(100, (amt / revenue) * 100)) : 0;
 
+  const afterVar = afterVariable != null ? afterVariable : (afterFixed - variableCostAmt);
+
   const steps = [
-    { category: 'revenue',        label: 'Revenue',         amount: revenue,         pct: 100,                 left: 0,                       width: 100,                       hidden: false, colorIdx: 0 },
+    { category: 'revenue',        label: 'Revenue',         amount: revenue,         pct: 100,                       left: 0,                       width: 100,                       hidden: false, colorIdx: 0 },
     { category: 'food-cost',      label: 'Food Cost',       amount: foodCostAmt,     pct: pctOfRev(foodCostAmt),     left: barLeft(afterFood),     width: barWidth(foodCostAmt),     hidden: false, colorIdx: 1 },
     { category: 'labor-cost',     label: 'Labor Cost',      amount: laborCostAmt,    pct: pctOfRev(laborCostAmt),    left: barLeft(afterLabor),    width: barWidth(laborCostAmt),    hidden: false, colorIdx: 2 },
     { category: 'fixed-cost',     label: 'Fixed Costs',     amount: fixedCostAmt,    pct: pctOfRev(fixedCostAmt),    left: barLeft(afterFixed),    width: barWidth(fixedCostAmt),    hidden: false, colorIdx: 3 },
-    { category: 'variable-cost',  label: 'Variable Costs',  amount: variableCostAmt, pct: pctOfRev(variableCostAmt), left: barLeft(netProfit),     width: barWidth(variableCostAmt), hidden: false, colorIdx: 4 },
-    { category: 'net-profit',     label: 'Net Profit (Est.)', amount: netProfit,       pct: pctOfRev(netProfit),       left: 0,                       width: barWidth(netProfit),       hidden: false, colorIdx: 5 },
+    { category: 'variable-cost',  label: 'Variable Costs',  amount: variableCostAmt, pct: pctOfRev(variableCostAmt), left: barLeft(afterVar),      width: barWidth(variableCostAmt), hidden: false, colorIdx: 4 },
+    { category: 'processing-fee', label: 'Processing Fees', amount: processingFeeAmt, pct: pctOfRev(processingFeeAmt), left: barLeft(netProfit),    width: barWidth(processingFeeAmt), hidden: false, colorIdx: 5 },
+    { category: 'net-profit',     label: 'Net Profit (Est.)', amount: netProfit,     pct: pctOfRev(netProfit),       left: 0,                       width: barWidth(netProfit),       hidden: false, colorIdx: 0 },
   ];
 
   return (

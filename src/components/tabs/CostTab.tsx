@@ -34,9 +34,9 @@ export default function CostTab({ checks, timeEntries, paymentDetails, cashEntri
   const { totalNetSales } = getKpiSummary(checks, start, end);
   const laborCost = getTotalLaborCost(timeEntries, start, end);
   const weeksInRange = getWeeksInRange(start, end);
-  const waterfall = computeMarginWaterfall(totalNetSales, laborCost, weeksInRange, costInputs);
   const laborByRole = getLaborCostByRole(timeEntries, start, end);
   const { totalFees: processingFees, feePctOfSales } = getProcessingFees(paymentDetails, checks, start, end);
+  const waterfall = computeMarginWaterfall(totalNetSales, laborCost, weeksInRange, costInputs, processingFees);
   const { totalPayIns, totalPayOuts, netCashMovement } = getCashSummary(cashEntries, start, end);
 
   const weeklyNetSales = weeksInRange > 0 ? round2(totalNetSales / weeksInRange) : 0;
