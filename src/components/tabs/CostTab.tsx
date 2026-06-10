@@ -53,7 +53,16 @@ export default function CostTab({ checks, timeEntries, paymentDetails }) {
         food, fixed, and variable costs are based on the assumptions you entered above.
         Accuracy depends on those inputs.
       </div>
-      <CostBreakdownChart waterfall={waterfall} />
+      <CostBreakdownChart waterfall={waterfall} processingFees={processingFees} />
+
+      <div data-role="processing-fees" className="kpi-grid-2" style={{ marginTop: '16px' }}>
+        <KpiCard
+          label="Card Processing Fees"
+          value={currencyFmt(processingFees)}
+          dataSourceLabel={`${feePctOfSales.toFixed(2)}% of net sales`}
+        />
+      </div>
+
 
       <table data-role="labor-table">
         <thead>
