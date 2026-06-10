@@ -31,6 +31,15 @@ export default function SalesTab({ checks, itemSelections, kitchenTimings, payme
         end={end}
       />
 
+      <ModifierPerformance
+        modifierSelections={modifierSelections}
+        itemSelections={itemSelections}
+        checks={checks}
+        start={start}
+        end={end}
+      />
+
+
       <DiningChannelChart
         itemSelections={itemSelections}
         checks={checks}
