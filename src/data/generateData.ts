@@ -395,7 +395,7 @@ export function generateAllData() {
   // ── Generate payment details (SEPARATE PRNG to preserve existing seeds) ──
   const paymentDetails = generatePaymentDetails(checks);
 
-  return { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails };
+  return { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails, modifierSelections };
 }
 
 function generatePaymentDetails(checks) {
