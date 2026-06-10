@@ -2,6 +2,7 @@
 import useDashboardStore from '../../store/useDashboardStore';
 
 const TABS = [
+  { id: 'summary', label: 'Summary' },
   { id: 'revenue', label: 'Revenue' },
   { id: 'cost', label: 'Cost' },
   { id: 'sales', label: 'Sales' },

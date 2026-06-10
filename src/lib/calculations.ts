@@ -663,3 +663,64 @@ export function getCustomerSummary(checks, start, end) {
     topCustomers,
   };
 }
+
+// ── Sales summary (executive rollup) ─────────────────────────────────────────
+
+export function getSalesSummary(checks, itemSelections, paymentDetails, orderDetails, start, end) {
+  const filteredChecks = filterChecksByRange(checks, start, end);
+  const filteredOrders = filterOrdersByRange(orderDetails, checks, start, end);
+  const filteredPayments = filterPaymentsByRange(paymentDetails, checks, start, end);
+
+  const { totalNetSales: netSales, totalChecks: checkCount, avgCheckSize: avgCheck } =
+    getKpiSummary(checks, start, end);
+
+  const totalTax = Math.round(filteredChecks.reduce((s, c) => s + c.tax, 0) * 100) / 100;
+  const totalDiscounts = Math.round(filteredChecks.reduce((s, c) => s + c.discount, 0) * 100) / 100;
+  // Gross sales = pre-discount subtotal (net + discount)
+  const grossSales = Math.round((netSales + totalDiscounts) * 100) / 100;
+
+  const totalGuests = filteredOrders.reduce((s, o) => s + (o.numGuests || 0), 0);
+  const totalTips = Math.round(filteredPayments.reduce((s, p) => s + (p.tip || 0), 0) * 100) / 100;
+  const totalGratuity = Math.round(filteredPayments.reduce((s, p) => s + (p.gratuity || 0), 0) * 100) / 100;
+
+  const voidItems = filterItemsByRange(itemSelections, checks, start, end).filter(i => i.isVoid);
+  const voidAmount = Math.round(voidItems.reduce((s, i) => s + i.grossPrice, 0) * 100) / 100;
+
+  const serviceRows = getSalesByService(itemSelections, checks, start, end);
+  const serviceTotal = serviceRows.reduce((s, r) => s + r.netSales, 0);
+  const byServiceType = serviceRows.map(r => ({
+    service: r.service,
+    netSales: r.netSales,
+    pct: serviceTotal > 0 ? Math.round((r.netSales / serviceTotal) * 1000) / 10 : 0,
+  }));
+
+  const channelRows = getDiningChannelSplit(itemSelections, checks, start, end);
+  const byDiningOption = channelRows.map(r => ({
+    diningOption: r.diningOption,
+    netSales: r.netRevenue,
+    pct: r.pct,
+  }));
+
+  const mix = getPaymentMix(paymentDetails, checks, start, end);
+  const byPaymentMethod = mix.map(m => ({
+    type: m.label,
+    amount: m.amount,
+    pct: m.pct,
+  }));
+
+  return {
+    netSales,
+    grossSales,
+    totalGuests,
+    checkCount,
+    avgCheck,
+    totalTax,
+    totalTips,
+    totalGratuity,
+    totalDiscounts,
+    voidAmount,
+    byServiceType,
+    byDiningOption,
+    byPaymentMethod,
+  };
+}
