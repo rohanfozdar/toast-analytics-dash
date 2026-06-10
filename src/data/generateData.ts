@@ -180,6 +180,7 @@ export function generateAllData() {
   const checks = [];
   const itemSelections = [];
   const kitchenTimings = [];
+  const modifierSelections = [];
 
   let checkIdCounter = 1;
   let itemSelectionIdCounter = 1;
