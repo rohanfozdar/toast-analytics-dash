@@ -511,3 +511,35 @@ export function getUpsellRevenue(modifierSelections, checks, start, end) {
     pctOfNetSales: netSales > 0 ? Math.round((upsell / netSales) * 1000) / 10 : 0,
   };
 }
+
+// ── Order details ─────────────────────────────────────────────────────────────
+
+export function filterOrdersByRange(orderDetails, checks, start, end) {
+  const checkIds = new Set(filterChecksByRange(checks, start, end).map(c => c.checkId));
+  return orderDetails.filter(o => checkIds.has(o.checkId));
+}
+
+export function getOrderSummary(orderDetails, checks, start, end) {
+  const orders = filterOrdersByRange(orderDetails, checks, start, end);
+  const orderCount = orders.length;
+  const avgGuests = orderCount > 0
+    ? Math.round(orders.reduce((s, o) => s + o.numGuests, 0) / orderCount * 100) / 100
+    : 0;
+  const avgDurationMin = orderCount > 0
+    ? Math.round(orders.reduce((s, o) => s + o.durationOpenedToPaid, 0) / orderCount * 100) / 100
+    : 0;
+
+  const bySource = {};
+  for (const o of orders) {
+    if (!bySource[o.orderSource]) bySource[o.orderSource] = { source: o.orderSource, count: 0 };
+    bySource[o.orderSource].count++;
+  }
+  const totalOrders = orders.length;
+  const bySourceArr = Object.values(bySource).map(s => ({
+    ...s,
+    pct: totalOrders > 0 ? Math.round((s.count / totalOrders) * 1000) / 10 : 0,
+  })).sort((a, b) => b.count - a.count);
+
+  return { orderCount, avgGuests, avgDurationMin, bySource: bySourceArr };
+}
+
