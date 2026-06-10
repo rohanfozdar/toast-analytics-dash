@@ -38,7 +38,7 @@ function randNormal(mean, sd) {
   return mean + z * sd;
 }
 
-const orderRand = mulberry32(0x0RDE5);
+const orderRand = mulberry32(0x0ADE5);
 const orInt = (min, max) => Math.floor(orderRand() * (max - min + 1)) + min;
 const orFloat = (min, max) => orderRand() * (max - min) + min;
 const orPick = arr => arr[Math.floor(orderRand() * arr.length)];
