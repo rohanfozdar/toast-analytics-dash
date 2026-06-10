@@ -400,3 +400,70 @@ export function getKitchenFulfillmentStats(kitchenTimings, start, end) {
 
   return { avgMinutes, byDiningOption, histogram };
 }
+// ── Payment details ──────────────────────────────────────────────────────────
+
+export function filterPaymentsByRange(paymentDetails, checks, start, end) {
+  const checkIds = new Set(filterChecksByRange(checks, start, end).map(c => c.checkId));
+  return paymentDetails.filter(p => checkIds.has(p.checkId));
+}
+
+export function getProcessingFees(paymentDetails, checks, start, end) {
+  const payments = filterPaymentsByRange(paymentDetails, checks, start, end);
+  const totalFees = Math.round(payments.reduce((s, p) => s + (p.vMcDFees || 0), 0) * 100) / 100;
+  const filteredChecks = filterChecksByRange(checks, start, end);
+  const netSales = filteredChecks.reduce((s, c) => s + (c.total - c.tax - c.discount), 0);
+  const feePctOfSales = netSales > 0
+    ? Math.round((totalFees / netSales) * 1000) / 10
+    : 0;
+  return { totalFees, feePctOfSales };
+}
+
+export function getRefundSummary(paymentDetails, checks, start, end) {
+  const payments = filterPaymentsByRange(paymentDetails, checks, start, end);
+  const refunds = payments.filter(p => p.refunded);
+  const refundAmount = Math.round(refunds.reduce((s, p) => s + (p.refundAmount || 0), 0) * 100) / 100;
+  const refundCount = refunds.length;
+  const refundRate = payments.length > 0
+    ? Math.round((refundCount / payments.length) * 1000) / 10
+    : 0;
+  return { refundCount, refundAmount, refundRate };
+}
+
+export function getPaymentMix(paymentDetails, checks, start, end) {
+  const payments = filterPaymentsByRange(paymentDetails, checks, start, end);
+  const buckets = {};
+  for (const p of payments) {
+    const label = p.type === 'Credit Card' && p.cardType ? p.cardType : p.type;
+    if (!buckets[label]) buckets[label] = { label, count: 0, amount: 0 };
+    buckets[label].count++;
+    buckets[label].amount += p.total;
+  }
+  const totalAmount = Object.values(buckets).reduce((s, b) => s + b.amount, 0);
+  return Object.values(buckets)
+    .map(b => ({
+      label: b.label,
+      count: b.count,
+      amount: Math.round(b.amount * 100) / 100,
+      pct: totalAmount > 0 ? Math.round((b.amount / totalAmount) * 1000) / 10 : 0,
+    }))
+    .sort((a, b) => b.amount - a.amount);
+}
+
+export function getTipSummary(paymentDetails, checks, start, end) {
+  const payments = filterPaymentsByRange(paymentDetails, checks, start, end);
+  let cashTips = 0;
+  let nonCashTips = 0;
+  for (const p of payments) {
+    if (p.type === 'Cash') cashTips += p.tip;
+    else nonCashTips += p.tip;
+  }
+  const totalTips = cashTips + nonCashTips;
+  const filteredChecks = filterChecksByRange(checks, start, end);
+  const netSales = filteredChecks.reduce((s, c) => s + (c.total - c.tax - c.discount), 0);
+  return {
+    cashTips: Math.round(cashTips * 100) / 100,
+    nonCashTips: Math.round(nonCashTips * 100) / 100,
+    totalTips: Math.round(totalTips * 100) / 100,
+    tipPctOfSales: netSales > 0 ? Math.round((totalTips / netSales) * 1000) / 10 : 0,
+  };
+}
