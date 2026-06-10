@@ -12,6 +12,7 @@ import {
   CARD_TYPES,
   CARD_TYPE_WEIGHTS,
   PROCESSING_FEE_RATE,
+  MODIFIER_CATALOG,
 } from './constants';
 
 // ── Seeded PRNG (mulberry32) for reproducible data ────────────────────────────
