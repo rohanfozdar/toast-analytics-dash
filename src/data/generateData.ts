@@ -607,10 +607,10 @@ function generateTimeEntries(today) {
 
   // Shift config by job title
   const SHIFT_CONFIG = {
-    Server:    { minH: 5, maxH: 6 },
-    Cook:      { minH: 8, maxH: 9 },
-    Host:      { minH: 4, maxH: 5 },
-    Bartender: { minH: 5, maxH: 7 },
+    Server:    { minH: 6, maxH: 7.5 },
+    Cook:      { minH: 8.5, maxH: 10 },
+    Host:      { minH: 4.5, maxH: 6 },
+    Bartender: { minH: 6, maxH: 8 },
   };
 
   // Work start times by job title (hour)
