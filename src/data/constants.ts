@@ -56,4 +56,12 @@ export const STAFF = [
   { name: 'Ama S.',     jobTitle: 'Cook',      wage: 18 },
   { name: 'Jake T.',    jobTitle: 'Cook',      wage: 18 },
   { name: 'Nina B.',    jobTitle: 'Server',    wage: 14 },
+  { name: 'Sofia P.',   jobTitle: 'Server',    wage: 14 },
+  { name: 'Daniel O.',  jobTitle: 'Server',    wage: 14 },
+  { name: 'Maya H.',    jobTitle: 'Server',    wage: 14 },
+  { name: 'Luis A.',    jobTitle: 'Cook',      wage: 18 },
+  { name: 'Ravi N.',    jobTitle: 'Cook',      wage: 18 },
+  { name: 'Ella W.',    jobTitle: 'Cook',      wage: 17 },
+  { name: 'Owen G.',    jobTitle: 'Bartender', wage: 16 },
+  { name: 'Hana Y.',    jobTitle: 'Host',      wage: 13 },
 ];
