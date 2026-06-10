@@ -66,3 +66,42 @@ export const STAFF = [
   { name: 'Ravi N.',    jobTitle: 'Cook',      wage: 18 },
   { name: 'Ella W.',    jobTitle: 'Host',      wage: 13 },
 ];
+export const MODIFIER_CATALOG = {
+  'Coffee & Drinks': [
+    { name: 'Oat milk',          optionGroup: 'Milk',    price: 0.75 },
+    { name: 'Almond milk',       optionGroup: 'Milk',    price: 0.75 },
+    { name: 'Extra shot',        optionGroup: 'Espresso', price: 1.00 },
+    { name: 'Sugar-free syrup',  optionGroup: 'Syrup',   price: 0 },
+    { name: 'Vanilla syrup',     optionGroup: 'Syrup',   price: 0.50 },
+  ],
+  'Breakfast': [
+    { name: 'Add bacon',         optionGroup: 'Add-ons', price: 3.00 },
+    { name: 'Add avocado',       optionGroup: 'Add-ons', price: 2.50 },
+    { name: 'Sub egg whites',    optionGroup: 'Sub',     price: 1.00 },
+    { name: 'No onions',         optionGroup: 'Prep',    price: 0 },
+  ],
+  'Lunch': [
+    { name: 'Add avocado',       optionGroup: 'Add-ons', price: 2.50 },
+    { name: 'Add bacon',         optionGroup: 'Add-ons', price: 3.00 },
+    { name: 'Add cheese',        optionGroup: 'Add-ons', price: 1.50 },
+    { name: 'Sub side salad',    optionGroup: 'Side',    price: 2.00 },
+    { name: 'No onions',         optionGroup: 'Prep',    price: 0 },
+  ],
+  'Dinner': [
+    { name: 'Add shrimp',        optionGroup: 'Protein', price: 6.00 },
+    { name: 'Add chicken',       optionGroup: 'Protein', price: 5.00 },
+    { name: 'Truffle butter',    optionGroup: 'Sauce',   price: 3.50 },
+    { name: 'Extra sauce',       optionGroup: 'Sauce',   price: 1.00 },
+    { name: 'Cook temp: med',    optionGroup: 'Prep',    price: 0 },
+  ],
+  'Bar': [
+    { name: 'Top-shelf upgrade', optionGroup: 'Upgrade', price: 4.00 },
+    { name: 'Extra shot',        optionGroup: 'Liquor',  price: 3.00 },
+    { name: 'Salt rim',          optionGroup: 'Prep',    price: 0 },
+  ],
+  'Desserts': [
+    { name: 'Add ice cream',     optionGroup: 'Add-ons', price: 2.50 },
+    { name: 'Whipped cream',     optionGroup: 'Add-ons', price: 1.00 },
+    { name: 'Berry compote',     optionGroup: 'Add-ons', price: 1.50 },
+  ],
+};
