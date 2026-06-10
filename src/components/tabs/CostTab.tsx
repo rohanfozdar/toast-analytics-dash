@@ -5,6 +5,7 @@ import {
   getTotalLaborCost,
   getLaborCostByRole,
   computeMarginWaterfall,
+  getProcessingFees,
 } from '../../lib/calculations';
 import { getWeeksInRange } from '../../lib/dateUtils';
 import CostInputPanel from '../shared/CostInputPanel';
@@ -20,10 +21,10 @@ const round2 = v => Math.round(v * 100) / 100;
 
 const SOURCE_NOTE =
   'Labor costs from TimeEntries.csv (Employee, Job Title, Payable Hours, Regular Pay, ' +
-  'Overtime Pay, Total Pay). Food, fixed, and variable costs entered manually — not ' +
-  'available in Toast export data.';
+  'Overtime Pay, Total Pay). Card processing fees from PaymentDetails.csv (V/MC/D Fees). ' +
+  'Food, fixed, and variable costs entered manually — not available in Toast export data.';
 
-export default function CostTab({ checks, timeEntries }) {
+export default function CostTab({ checks, timeEntries, paymentDetails }) {
   const { start, end } = useDashboardStore(s => s.dateRange);
   const costInputs = useDashboardStore(s => s.costInputs);
 
@@ -32,6 +33,7 @@ export default function CostTab({ checks, timeEntries }) {
   const weeksInRange = getWeeksInRange(start, end);
   const waterfall = computeMarginWaterfall(totalNetSales, laborCost, weeksInRange, costInputs);
   const laborByRole = getLaborCostByRole(timeEntries, start, end);
+  const { totalFees: processingFees, feePctOfSales } = getProcessingFees(paymentDetails, checks, start, end);
 
   const weeklyNetSales = weeksInRange > 0 ? round2(totalNetSales / weeksInRange) : 0;
   const monthlyNetSales = round2(weeklyNetSales * (52 / 12));
