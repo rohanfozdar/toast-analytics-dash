@@ -677,4 +677,4 @@ function generateTimeEntries(today) {
   return entries;
 }
 
-export const { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails, modifierSelections } = generateAllData();
+export const { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails, modifierSelections, orderDetails } = generateAllData();
