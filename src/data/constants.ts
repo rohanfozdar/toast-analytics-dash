@@ -4,6 +4,9 @@ export const DINING_OPTIONS = ['Dine-in', 'Take Out', 'Delivery', 'Curbside'];
 export const TENDERS = ['Credit Card', 'Cash', 'Gift Card', 'Third Party'];
 export const DINING_AREAS = ['Main Floor', 'Bar', 'Patio'];
 export const STATIONS = ['Hot Line', 'Cold Station', 'Bar'];
+export const CARD_TYPES = ['Visa', 'Mastercard', 'Amex', 'Discover'];
+export const CARD_TYPE_WEIGHTS = [0.45, 0.35, 0.12, 0.08];
+export const PROCESSING_FEE_RATE = 0.028;
 export const DISCOUNT_REASONS = [
   'Staff meal',
   'Manager comp',
