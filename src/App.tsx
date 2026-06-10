@@ -28,6 +28,7 @@ function App() {
               itemSelections={itemSelections}
               kitchenTimings={kitchenTimings}
               paymentDetails={paymentDetails}
+              modifierSelections={modifierSelections}
             />
           )}
         </div>
