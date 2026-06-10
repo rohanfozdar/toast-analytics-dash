@@ -231,8 +231,8 @@ export function generateAllData() {
       }
 
       // Discount
-      const hasDiscount = rand() < 0.20;
-      const discountAmt = hasDiscount ? Math.round(subtotal * randFloat(0.10, 0.30) * 100) / 100 : 0;
+      const hasDiscount = rand() < 0.32;
+      const discountAmt = hasDiscount ? Math.round(subtotal * randFloat(0.18, 0.42) * 100) / 100 : 0;
       const reasonOfDiscount = hasDiscount ? pick(DISCOUNT_REASONS) : '';
 
       const tax = Math.round(subtotal * 0.085 * 100) / 100;
