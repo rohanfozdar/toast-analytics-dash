@@ -43,6 +43,11 @@ const orInt = (min, max) => Math.floor(orderRand() * (max - min + 1)) + min;
 const orFloat = (min, max) => orderRand() * (max - min) + min;
 const orPick = arr => arr[Math.floor(orderRand() * arr.length)];
 
+const cashRand = mulberry32(0xCA54);
+const crInt = (min, max) => Math.floor(cashRand() * (max - min + 1)) + min;
+const crFloat = (min, max) => cashRand() * (max - min) + min;
+const crPick = arr => arr[Math.floor(cashRand() * arr.length)];
+
 // ── Date formatting helpers ───────────────────────────────────────────────────
 function fmtCheckDate(d) {
   // MM/DD/YY
@@ -433,7 +438,10 @@ export function generateAllData() {
   // ── Generate payment details (SEPARATE PRNG to preserve existing seeds) ──
   const paymentDetails = generatePaymentDetails(checks);
 
-  return { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails, modifierSelections, orderDetails };
+  // ── Generate cash entries (SEPARATE PRNG to preserve existing seeds) ──
+  const cashEntries = generateCashEntries(today);
+
+  return { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails, modifierSelections, orderDetails, cashEntries };
 }
 
 function generatePaymentDetails(checks) {
@@ -543,6 +551,55 @@ function generatePaymentDetails(checks) {
   }
 
   return payments;
+}
+
+function generateCashEntries(today) {
+  const entries = [];
+  const CASH_ACTIONS = ['Cash In', 'Pay Out', 'No Sale', 'Tip Out'];
+  const PAYOUT_REASONS = ['Vendor payment', 'Petty cash', 'Bank deposit', 'Tip out', 'Change order'];
+  const CASH_DRAWERS = ['Drawer 1', 'Drawer 2'];
+
+  let cashIdCounter = 1;
+
+  for (let dayOffset = 89; dayOffset >= 0; dayOffset--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - dayOffset);
+
+    // 2–6 cash events per day
+    const eventsToday = crInt(2, 6);
+    for (let ei = 0; ei < eventsToday; ei++) {
+      const action = crPick(CASH_ACTIONS);
+      let amount = 0;
+      if (action === 'Cash In') {
+        amount = Math.round(crFloat(50, 500) * 100) / 100;
+      } else if (action === 'Pay Out' || action === 'Tip Out') {
+        amount = Math.round(crFloat(10, 300) * 100) / 100;
+      }
+
+      const payoutReason = (action === 'Pay Out' || action === 'Tip Out') ? crPick(PAYOUT_REASONS) : '';
+      const employee = crPick(STAFF).name;
+      const cashDrawer = crPick(CASH_DRAWERS);
+
+      // Business hours: 7am–10pm
+      const hour = crInt(7, 22);
+      const minute = crInt(0, 59);
+      const createdDate = new Date(date);
+      createdDate.setHours(hour, minute, 0, 0);
+
+      entries.push({
+        cashEntryId: `CASH-${String(cashIdCounter).padStart(7, '0')}`,
+        amount,
+        payoutReason,
+        employee,
+        createdDate,
+        cashDrawer,
+        action,
+      });
+      cashIdCounter++;
+    }
+  }
+
+  return entries;
 }
 
 function generateTimeEntries(today) {
@@ -677,4 +734,4 @@ function generateTimeEntries(today) {
   return entries;
 }
 
-export const { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails, modifierSelections, orderDetails } = generateAllData();
+export const { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails, modifierSelections, orderDetails, cashEntries } = generateAllData();
