@@ -12,6 +12,7 @@ import {
   CARD_TYPES,
   CARD_TYPE_WEIGHTS,
   PROCESSING_FEE_RATE,
+  MODIFIER_CATALOG,
 } from './constants';
 
 // ── Seeded PRNG (mulberry32) for reproducible data ────────────────────────────
@@ -179,6 +180,7 @@ export function generateAllData() {
   const checks = [];
   const itemSelections = [];
   const kitchenTimings = [];
+  const modifierSelections = [];
 
   let checkIdCounter = 1;
   let itemSelectionIdCounter = 1;
@@ -227,10 +229,26 @@ export function generateAllData() {
 
       let subtotal = 0;
       const checkItems = [];
+      const itemModifiers = []; // parallel array of modifier-arrays per item
       for (let ii = 0; ii < numItems; ii++) {
         const menuItem = weightedPickItem(availItems);
         checkItems.push(menuItem);
         subtotal += menuItem.price;
+
+        // Pre-roll 0-3 modifiers (weighted toward 0-1) so we can fold paid mods
+        // into the parent's price + check subtotal BEFORE tax/total compute.
+        const modR = rand();
+        const numMods = modR < 0.45 ? 0 : modR < 0.80 ? 1 : modR < 0.95 ? 2 : 3;
+        const catalog = MODIFIER_CATALOG[menuItem.group] || [];
+        const mods = [];
+        if (catalog.length > 0) {
+          for (let mi = 0; mi < numMods; mi++) {
+            const mod = pick(catalog);
+            mods.push(mod);
+            subtotal += mod.price; // ADDITIVE to subtotal
+          }
+        }
+        itemModifiers.push(mods);
       }
 
       // Discount
@@ -269,6 +287,7 @@ export function generateAllData() {
 
       // Item selections
       const orderNumber = orderNumberCounter++;
+      const orderId = `ORD-${String(orderNumber).padStart(6, '0')}`;
       const diningArea = diningOption === 'Dine-in'
         ? pick(DINING_AREAS)
         : diningOption === 'Delivery' ? 'Main Floor' : pick(DINING_AREAS);
@@ -277,12 +296,16 @@ export function generateAllData() {
 
       for (let ii = 0; ii < checkItems.length; ii++) {
         const menuItem = checkItems[ii];
+        const mods = itemModifiers[ii];
+        const modsTotal = Math.round(mods.reduce((s, m) => s + m.price, 0) * 100) / 100;
+
         // Some items have a higher void rate to demonstrate the alert UI
         const highVoidItems = new Set(['Eggs Benedict', 'Ribeye Steak', 'Pasta Arrabiata']);
         const voidChance = highVoidItems.has(menuItem.name) ? 0.075 : 0.03;
         const isVoid = rand() < voidChance;
         const voidReason = isVoid ? pick(VOID_REASONS) : '';
-        const grossPrice = menuItem.price;
+        // ADDITIVE: roll paid modifiers into the parent's gross + net price
+        const grossPrice = Math.round((menuItem.price + modsTotal) * 100) / 100;
         const discnt = isVoid ? 0 : perItemDiscount;
         const netPrice = Math.round((grossPrice - discnt) * 100) / 100;
         const itemTax = Math.round(grossPrice * 0.085 * 100) / 100;
@@ -290,9 +313,10 @@ export function generateAllData() {
         // sentDate is a few minutes after openedAt
         const sentAt = new Date(openedAt.getTime() + randInt(1, 5) * 60000);
 
+        const parentItemSelectionId = `ITEM-${String(itemSelectionIdCounter).padStart(7, '0')}`;
         itemSelections.push({
-          itemSelectionId: `ITEM-${String(itemSelectionIdCounter).padStart(7, '0')}`,
-          orderId: `ORD-${String(orderNumber).padStart(6, '0')}`,
+          itemSelectionId: parentItemSelectionId,
+          orderId,
           orderNumber,
           checkId,
           orderDate: fmtItemDate(openedAt),
@@ -316,7 +340,29 @@ export function generateAllData() {
           voidReason,
         });
         itemSelectionIdCounter++;
+
+        // Emit modifier rows
+        for (const m of mods) {
+          modifierSelections.push({
+            parentMenuSelectionItemId: parentItemSelectionId,
+            parentMenuSelection: menuItem.name,
+            modifier: m.name,
+            modifierName: m.name,
+            optionGroupName: m.optionGroup,
+            grossPrice: m.price,
+            discnt: 0,
+            netPrice: m.price,
+            qty: 1.0000,
+            checkId,
+            orderId,
+            orderNumber,
+            isVoid,
+            voidReason,
+            voidReasonId: '',
+          });
+        }
       }
+
 
       // Kitchen timing (one ticket per check)
       const kParams = KITCHEN_PARAMS[diningOption];
@@ -349,7 +395,7 @@ export function generateAllData() {
   // ── Generate payment details (SEPARATE PRNG to preserve existing seeds) ──
   const paymentDetails = generatePaymentDetails(checks);
 
-  return { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails };
+  return { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails, modifierSelections };
 }
 
 function generatePaymentDetails(checks) {
@@ -593,4 +639,4 @@ function generateTimeEntries(today) {
   return entries;
 }
 
-export const { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails } = generateAllData();
+export const { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails, modifierSelections } = generateAllData();

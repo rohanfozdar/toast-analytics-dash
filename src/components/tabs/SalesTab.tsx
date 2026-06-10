@@ -7,6 +7,7 @@ import AvgCheckChart from '../charts/AvgCheckChart';
 import KitchenFulfillmentChart from '../charts/KitchenFulfillmentChart';
 import PaymentMixChart from '../charts/PaymentMixChart';
 import RefundSummary from '../charts/RefundSummary';
+import ModifierPerformance from '../charts/ModifierPerformance';
 import DataSourceNote from '../shared/DataSourceNote';
 
 const SOURCE_NOTE =
@@ -14,9 +15,11 @@ const SOURCE_NOTE =
   'Void rate = Void Qty ÷ (Item Qty incl voids). ' +
   'Kitchen timing from KitchenTimings.csv (Fired Date to Fulfilled Date). ' +
   'Discounts from CheckDetails.csv (Discount, Reason of Discount). ' +
-  'Payment mix and refunds from PaymentDetails.csv (Type, Card Type, Refunded, Refund Amount).';
+  'Payment mix and refunds from PaymentDetails.csv (Type, Card Type, Refunded, Refund Amount). ' +
+  'Add-ons and upsells from ModifierSelectionDetails.csv (Modifier Name, Option Group, Net Price); ' +
+  'paid modifier revenue is included in parent item gross/net price.';
 
-export default function SalesTab({ checks, itemSelections, kitchenTimings, paymentDetails }) {
+export default function SalesTab({ checks, itemSelections, kitchenTimings, paymentDetails, modifierSelections }) {
   const { start, end } = useDashboardStore(s => s.dateRange);
 
   return (
@@ -27,6 +30,15 @@ export default function SalesTab({ checks, itemSelections, kitchenTimings, payme
         start={start}
         end={end}
       />
+
+      <ModifierPerformance
+        modifierSelections={modifierSelections}
+        itemSelections={itemSelections}
+        checks={checks}
+        start={start}
+        end={end}
+      />
+
 
       <DiningChannelChart
         itemSelections={itemSelections}

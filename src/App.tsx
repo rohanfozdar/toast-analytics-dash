@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails } from './data/generateData';
+import { checks, itemSelections, timeEntries, kitchenTimings, paymentDetails, modifierSelections } from './data/generateData';
 import useDashboardStore from './store/useDashboardStore';
 import Header from './components/layout/Header';
 import TabNav from './components/layout/TabNav';
@@ -28,6 +28,7 @@ function App() {
               itemSelections={itemSelections}
               kitchenTimings={kitchenTimings}
               paymentDetails={paymentDetails}
+              modifierSelections={modifierSelections}
             />
           )}
         </div>

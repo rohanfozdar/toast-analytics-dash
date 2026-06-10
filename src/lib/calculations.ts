@@ -467,3 +467,47 @@ export function getTipSummary(paymentDetails, checks, start, end) {
     tipPctOfSales: netSales > 0 ? Math.round((totalTips / netSales) * 1000) / 10 : 0,
   };
 }
+
+// ── Modifier selections ──────────────────────────────────────────────────────
+
+export function filterModifiersByRange(modifierSelections, checks, start, end) {
+  const checkIds = new Set(filterChecksByRange(checks, start, end).map(c => c.checkId));
+  return modifierSelections.filter(m => checkIds.has(m.checkId));
+}
+
+export function getModifierAttachRate(modifierSelections, itemSelections, checks, start, end) {
+  const items = filterItemsByRange(itemSelections, checks, start, end).filter(i => !i.isVoid);
+  const mods = filterModifiersByRange(modifierSelections, checks, start, end)
+    .filter(m => !m.isVoid && m.netPrice > 0);
+  const parentsWithPaidMod = new Set(mods.map(m => m.parentMenuSelectionItemId));
+  const attached = items.filter(i => parentsWithPaidMod.has(i.itemSelectionId)).length;
+  return items.length > 0 ? Math.round((attached / items.length) * 1000) / 10 : 0;
+}
+
+export function getModifierPerformance(modifierSelections, checks, start, end) {
+  const mods = filterModifiersByRange(modifierSelections, checks, start, end)
+    .filter(m => !m.isVoid);
+  const byName = {};
+  for (const m of mods) {
+    if (!byName[m.modifierName]) {
+      byName[m.modifierName] = { modifierName: m.modifierName, count: 0, revenue: 0 };
+    }
+    byName[m.modifierName].count++;
+    byName[m.modifierName].revenue += m.netPrice;
+  }
+  return Object.values(byName)
+    .map(r => ({ ...r, revenue: Math.round(r.revenue * 100) / 100 }))
+    .sort((a, b) => b.revenue - a.revenue);
+}
+
+export function getUpsellRevenue(modifierSelections, checks, start, end) {
+  const mods = filterModifiersByRange(modifierSelections, checks, start, end)
+    .filter(m => !m.isVoid);
+  const upsell = Math.round(mods.reduce((s, m) => s + m.netPrice, 0) * 100) / 100;
+  const filteredChecks = filterChecksByRange(checks, start, end);
+  const netSales = filteredChecks.reduce((s, c) => s + (c.total - c.tax - c.discount), 0);
+  return {
+    upsellRevenue: upsell,
+    pctOfNetSales: netSales > 0 ? Math.round((upsell / netSales) * 1000) / 10 : 0,
+  };
+}
