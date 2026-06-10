@@ -5,15 +5,18 @@ import DiningChannelChart from '../charts/DiningChannelChart';
 import DiscountSummary from '../charts/DiscountSummary';
 import AvgCheckChart from '../charts/AvgCheckChart';
 import KitchenFulfillmentChart from '../charts/KitchenFulfillmentChart';
+import PaymentMixChart from '../charts/PaymentMixChart';
+import RefundSummary from '../charts/RefundSummary';
 import DataSourceNote from '../shared/DataSourceNote';
 
 const SOURCE_NOTE =
   'Menu data aggregated from ItemSelectionDetails.csv using AllItemsReport.csv field logic. ' +
   'Void rate = Void Qty ÷ (Item Qty incl voids). ' +
   'Kitchen timing from KitchenTimings.csv (Fired Date to Fulfilled Date). ' +
-  'Discounts from CheckDetails.csv (Discount, Reason of Discount).';
+  'Discounts from CheckDetails.csv (Discount, Reason of Discount). ' +
+  'Payment mix and refunds from PaymentDetails.csv (Type, Card Type, Refunded, Refund Amount).';
 
-export default function SalesTab({ checks, itemSelections, kitchenTimings }) {
+export default function SalesTab({ checks, itemSelections, kitchenTimings, paymentDetails }) {
   const { start, end } = useDashboardStore(s => s.dateRange);
 
   return (
@@ -40,6 +43,22 @@ export default function SalesTab({ checks, itemSelections, kitchenTimings }) {
         start={start}
         end={end}
       />
+
+      <section data-section="payments">
+        <h2 className="chart-section-title" style={{ marginBottom: 0 }}>Payments</h2>
+        <PaymentMixChart
+          paymentDetails={paymentDetails}
+          checks={checks}
+          start={start}
+          end={end}
+        />
+        <RefundSummary
+          paymentDetails={paymentDetails}
+          checks={checks}
+          start={start}
+          end={end}
+        />
+      </section>
 
       <KitchenFulfillmentChart
         kitchenTimings={kitchenTimings}
