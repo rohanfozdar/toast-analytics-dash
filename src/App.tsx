@@ -6,6 +6,7 @@ import TabNav from './components/layout/TabNav';
 import RevenueTab from './components/tabs/RevenueTab';
 import CostTab from './components/tabs/CostTab';
 import SalesTab from './components/tabs/SalesTab';
+import CustomersTab from './components/tabs/CustomersTab';
 
 function App() {
   const activeTab = useDashboardStore(s => s.activeTab);
@@ -30,6 +31,9 @@ function App() {
               paymentDetails={paymentDetails}
               modifierSelections={modifierSelections}
             />
+          )}
+          {activeTab === 'customers' && (
+            <CustomersTab checks={checks} />
           )}
         </div>
       </main>

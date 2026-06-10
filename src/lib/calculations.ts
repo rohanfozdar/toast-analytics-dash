@@ -608,3 +608,58 @@ export function getCashOverShort(cashEntries, checks, start, end) {
 }
 
 
+
+// ── Customer / loyalty summary ───────────────────────────────────────────────
+
+export function getCustomerSummary(checks, start, end) {
+  const filtered = filterChecksByRange(checks, start, end);
+  const totalChecks = filtered.length;
+  const linked = filtered.filter(c => c.customerId);
+  const linkedCheckPct = totalChecks > 0
+    ? Math.round((linked.length / totalChecks) * 1000) / 10
+    : 0;
+
+  const byCustomer = {};
+  for (const c of linked) {
+    const id = c.customerId;
+    if (!byCustomer[id]) {
+      byCustomer[id] = { customerId: id, customer: c.customer, visits: 0, totalSpend: 0 };
+    }
+    byCustomer[id].visits++;
+    byCustomer[id].totalSpend += (c.total - c.tax - c.discount);
+  }
+  const customers = Object.values(byCustomer);
+
+  const uniqueCustomers = customers.length;
+  const repeaters = customers.filter(c => c.visits >= 2).length;
+  const repeatCustomerRate = uniqueCustomers > 0
+    ? Math.round((repeaters / uniqueCustomers) * 1000) / 10
+    : 0;
+  const totalSpend = customers.reduce((s, c) => s + c.totalSpend, 0);
+  const avgCustomerSpend = uniqueCustomers > 0
+    ? Math.round((totalSpend / uniqueCustomers) * 100) / 100
+    : 0;
+
+  const newVsReturning = {
+    new: customers.filter(c => c.visits === 1).length,
+    returning: repeaters,
+  };
+
+  const topCustomers = customers
+    .map(c => ({
+      customer: c.customer,
+      visits: c.visits,
+      totalSpend: Math.round(c.totalSpend * 100) / 100,
+    }))
+    .sort((a, b) => b.totalSpend - a.totalSpend)
+    .slice(0, 10);
+
+  return {
+    uniqueCustomers,
+    linkedCheckPct,
+    repeatCustomerRate,
+    avgCustomerSpend,
+    newVsReturning,
+    topCustomers,
+  };
+}
