@@ -61,7 +61,4 @@ export const STAFF = [
   { name: 'Maya H.',    jobTitle: 'Server',    wage: 14 },
   { name: 'Luis A.',    jobTitle: 'Cook',      wage: 18 },
   { name: 'Ravi N.',    jobTitle: 'Cook',      wage: 18 },
-  { name: 'Ella W.',    jobTitle: 'Cook',      wage: 17 },
-  { name: 'Owen G.',    jobTitle: 'Bartender', wage: 16 },
-  { name: 'Hana Y.',    jobTitle: 'Host',      wage: 13 },
 ];
