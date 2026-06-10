@@ -7,6 +7,7 @@ import RevenueTab from './components/tabs/RevenueTab';
 import CostTab from './components/tabs/CostTab';
 import SalesTab from './components/tabs/SalesTab';
 import CustomersTab from './components/tabs/CustomersTab';
+import SummaryTab from './components/tabs/SummaryTab';
 
 function App() {
   const activeTab = useDashboardStore(s => s.activeTab);
@@ -17,6 +18,9 @@ function App() {
       <TabNav />
       <main>
         <div key={activeTab}>
+          {activeTab === 'summary' && (
+            <SummaryTab checks={checks} itemSelections={itemSelections} paymentDetails={paymentDetails} orderDetails={orderDetails} />
+          )}
           {activeTab === 'revenue' && (
             <RevenueTab checks={checks} itemSelections={itemSelections} orderDetails={orderDetails} />
           )}

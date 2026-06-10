@@ -7,7 +7,7 @@ import { COST_DEFAULTS } from '../data/constants.js';
 const useDashboardStore = create(
   persist(
     (set) => ({
-      activeTab: 'revenue',
+      activeTab: 'summary',
       dateRange: (() => {
         const { start, end } = presetToRange('30d');
         return { preset: '30d', start, end };
