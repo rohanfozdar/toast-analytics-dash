@@ -1,6 +1,7 @@
 // @ts-nocheck
 import useDashboardStore from '../../store/useDashboardStore';
 import MenuPerformanceTable from '../charts/MenuPerformanceTable';
+import SalesByCategoryChart from '../charts/SalesByCategoryChart';
 import DiningChannelChart from '../charts/DiningChannelChart';
 import DiscountSummary from '../charts/DiscountSummary';
 import AvgCheckChart from '../charts/AvgCheckChart';
@@ -12,6 +13,8 @@ import DataSourceNote from '../shared/DataSourceNote';
 
 const SOURCE_NOTE =
   'Menu data aggregated from ItemSelectionDetails.csv using AllItemsReport.csv field logic. ' +
+  'Sales Category (Food / Beverage / Alcohol) is a separate revenue axis from Menu Group ' +
+  '(Breakfast, Lunch, Bar, etc.). ' +
   'Void rate = Void Qty ÷ (Item Qty incl voids). ' +
   'Kitchen timing from KitchenTimings.csv (Fired Date to Fulfilled Date). ' +
   'Discounts from CheckDetails.csv (Discount, Reason of Discount). ' +
@@ -30,6 +33,14 @@ export default function SalesTab({ checks, itemSelections, kitchenTimings, payme
         start={start}
         end={end}
       />
+
+      <SalesByCategoryChart
+        itemSelections={itemSelections}
+        checks={checks}
+        start={start}
+        end={end}
+      />
+
 
       <ModifierPerformance
         modifierSelections={modifierSelections}
