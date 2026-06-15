@@ -729,3 +729,38 @@ export function getSalesSummary(checks, itemSelections, paymentDetails, orderDet
     byPaymentMethod,
   };
 }
+
+// ── Industry KPIs: Prime cost, SPLH, GPLH, PPA ───────────────────────────────
+
+export function getPrimeCost(checks, timeEntries, costInputs, start, end) {
+  const { totalNetSales } = getKpiSummary(checks, start, end);
+  const laborCostAmt = getTotalLaborCost(timeEntries, start, end);
+  const foodCostAmt = Math.round(totalNetSales * (costInputs?.foodCostPct || 0) / 100 * 100) / 100;
+  const primeCostAmt = Math.round((foodCostAmt + laborCostAmt) * 100) / 100;
+  const primeCostPct = totalNetSales > 0
+    ? Math.round((primeCostAmt / totalNetSales) * 1000) / 10
+    : 0;
+  return { foodCostAmt, laborCostAmt, primeCostAmt, primeCostPct };
+}
+
+export function getSalesPerLaborHour(checks, timeEntries, start, end) {
+  const { totalNetSales } = getKpiSummary(checks, start, end);
+  const hours = filterLaborByRange(timeEntries, start, end)
+    .reduce((s, t) => s + (t.payableHours || 0), 0);
+  return hours > 0 ? Math.round((totalNetSales / hours) * 100) / 100 : 0;
+}
+
+export function getGuestsPerLaborHour(orderDetails, timeEntries, checks, start, end) {
+  const orders = filterOrdersByRange(orderDetails, checks, start, end);
+  const guests = orders.reduce((s, o) => s + (o.numGuests || 0), 0);
+  const hours = filterLaborByRange(timeEntries, start, end)
+    .reduce((s, t) => s + (t.payableHours || 0), 0);
+  return hours > 0 ? Math.round((guests / hours) * 100) / 100 : 0;
+}
+
+export function getPerPersonAverage(checks, orderDetails, start, end) {
+  const { totalNetSales } = getKpiSummary(checks, start, end);
+  const orders = filterOrdersByRange(orderDetails, checks, start, end);
+  const guests = orders.reduce((s, o) => s + (o.numGuests || 0), 0);
+  return guests > 0 ? Math.round((totalNetSales / guests) * 100) / 100 : 0;
+}
