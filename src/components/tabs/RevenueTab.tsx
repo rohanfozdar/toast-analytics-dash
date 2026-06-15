@@ -8,6 +8,7 @@ import PeriodComparisonChart from '../charts/PeriodComparisonChart';
 import DaypartChart from '../charts/DaypartChart';
 import DayOfWeekChart from '../charts/DayOfWeekChart';
 import OrderSourceChart from '../charts/OrderSourceChart';
+import { formatCurrency, formatPercent, formatCount, formatMinutes } from '../../lib/format';
 
 const SOURCE_NOTE =
   'Revenue data sourced from CheckDetails.csv (Opened Date, Total, Tax, Discount), ' +
