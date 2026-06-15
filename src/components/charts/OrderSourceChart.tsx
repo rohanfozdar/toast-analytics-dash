@@ -4,6 +4,7 @@ import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { getOrderSummary } from '../../lib/calculations';
 import { CHART_COLOR_LIST } from '../../lib/chartColors';
+import { formatPercent } from '../../lib/format';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -35,7 +36,7 @@ export default function OrderSourceChart({ orderDetails, checks, start, end }) {
         callbacks: {
           label: ctx => {
             const m = mix[ctx.dataIndex];
-            return `${ctx.label}: ${m.count} orders (${m.pct.toFixed(1)}%)`;
+            return `${ctx.label}: ${m.count} orders (${formatPercent(m.pct, 'composition')})`;
           },
         },
       },

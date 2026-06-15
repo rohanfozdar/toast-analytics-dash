@@ -16,11 +16,11 @@ import {
 } from '../../lib/calculations';
 import KpiCard from '../shared/KpiCard';
 import { CHART_COLORS } from '../../lib/chartColors';
+import { formatCurrency, formatPercent, formatCount } from '../../lib/format';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
-const currencyFmt = v =>
-  v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+const currencyFmt = formatCurrency;
 
 export default function ModifierPerformance({
   modifierSelections,
@@ -70,9 +70,9 @@ export default function ModifierPerformance({
       <h2 className="chart-section-title" style={{ marginBottom: 0 }}>Modifier Performance</h2>
 
       <div className="kpi-grid-3">
-        <KpiCard label="Attach Rate (paid mods)" value={`${attachRate.toFixed(1)}%`} />
+        <KpiCard label="Attach Rate (paid mods)" value={formatPercent(attachRate, 'ratio')} />
         <KpiCard label="Upsell Revenue" value={currencyFmt(upsellRevenue)} />
-        <KpiCard label="Upsell % of Net Sales" value={`${pctOfNetSales.toFixed(1)}%`} />
+        <KpiCard label="Upsell % of Net Sales" value={formatPercent(pctOfNetSales, 'ratio')} />
       </div>
 
       <div data-chart="modifier-performance" style={{ marginTop: '24px' }}>
@@ -94,7 +94,7 @@ export default function ModifierPerformance({
           {rows.map(r => (
             <tr key={r.modifierName}>
               <td>{r.modifierName}</td>
-              <td>{r.count.toLocaleString()}</td>
+              <td>{formatCount(r.count)}</td>
               <td>{currencyFmt(r.revenue)}</td>
             </tr>
           ))}
