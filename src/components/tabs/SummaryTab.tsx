@@ -13,13 +13,27 @@ const SOURCE_NOTE =
 
 const cur = v => v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
-export default function SummaryTab({ checks, itemSelections, paymentDetails, orderDetails }) {
+export default function SummaryTab({ checks, itemSelections, paymentDetails, orderDetails, timeEntries }) {
   const { start, end } = useDashboardStore(s => s.dateRange);
+  const costInputs = useDashboardStore(s => s.costInputs);
 
   const s = useMemo(
     () => getSalesSummary(checks, itemSelections, paymentDetails, orderDetails, start, end),
     [checks, itemSelections, paymentDetails, orderDetails, start, end]
   );
+
+  const prime = useMemo(
+    () => getPrimeCost(checks, timeEntries, costInputs, start, end),
+    [checks, timeEntries, costInputs, start, end]
+  );
+  const ppa = useMemo(
+    () => getPerPersonAverage(checks, orderDetails, start, end),
+    [checks, orderDetails, start, end]
+  );
+  const primeAlert = prime.primeCostPct > 65 ? 'true' : undefined;
+  const primeSentiment = prime.primeCostPct > 65
+    ? 'negative'
+    : prime.primeCostPct >= 60 ? 'neutral' : 'positive';
 
   return (
     <div>
@@ -35,6 +49,22 @@ export default function SummaryTab({ checks, itemSelections, paymentDetails, ord
         <KpiCard label="Tax" value={cur(s.totalTax)} />
         <KpiCard label="Voids" value={cur(s.voidAmount)} />
       </div>
+      <div className="kpi-grid-2" style={{ marginTop: '16px' }} data-role="industry-kpis">
+        <div data-alert={primeAlert}>
+          <KpiCard
+            label="Prime Cost %"
+            value={`${prime.primeCostPct.toFixed(1)}%`}
+            sentiment={primeSentiment}
+            dataSourceLabel="Food + labor; target 55–65%"
+          />
+        </div>
+        <KpiCard
+          label="Per-Person Average (PPA)"
+          value={cur(ppa)}
+          dataSourceLabel="Net sales ÷ guests"
+        />
+      </div>
+
 
       <div data-role="summary-by-service" style={{ marginTop: '24px' }}>
         <h2 className="chart-section-title">Net Sales by Service Type</h2>
