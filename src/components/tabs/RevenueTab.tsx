@@ -80,9 +80,9 @@ export default function RevenueTab({ checks, itemSelections, orderDetails, payme
       <div>
         <h2 className="chart-section-title" style={{ marginBottom: '16px' }}>Orders</h2>
         <div className="kpi-grid-3">
-          <KpiCard label="Order Count" value={orderCount.toLocaleString()} />
+          <KpiCard label="Order Count" value={formatCount(orderCount)} />
           <KpiCard label="Avg Guests / Order" value={avgGuests.toFixed(1)} />
-          <KpiCard label="Avg Processing Time" value={`${avgDurationMin.toFixed(0)} min`} />
+          <KpiCard label="Avg Processing Time" value={formatMinutes(avgDurationMin)} />
         </div>
       </div>
 
