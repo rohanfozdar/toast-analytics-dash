@@ -132,7 +132,7 @@ export default function CostTab({ checks, timeEntries, paymentDetails, cashEntri
                 <td>{role.totalHours}</td>
                 <td>{role.overtimeHours}</td>
                 <td>{currencyFmt(role.totalPay)}</td>
-                <td>{roleLaborPct}%</td>
+                <td>{formatPercent(roleLaborPct, 'ratio')}</td>
               </tr>
             );
           })}
