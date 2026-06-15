@@ -17,9 +17,9 @@ import CostBreakdownChart from '../charts/CostBreakdownChart';
 import CashByActionChart from '../charts/CashByActionChart';
 import KpiCard from '../shared/KpiCard';
 import DataSourceNote from '../shared/DataSourceNote';
+import { formatCurrency, formatPercent } from '../../lib/format';
 
-const currencyFmt = v =>
-  v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+const currencyFmt = formatCurrency;
 
 const round2 = v => Math.round(v * 100) / 100;
 
