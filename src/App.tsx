@@ -22,7 +22,7 @@ function App() {
             <SummaryTab checks={checks} itemSelections={itemSelections} paymentDetails={paymentDetails} orderDetails={orderDetails} />
           )}
           {activeTab === 'revenue' && (
-            <RevenueTab checks={checks} itemSelections={itemSelections} orderDetails={orderDetails} />
+            <RevenueTab checks={checks} itemSelections={itemSelections} orderDetails={orderDetails} paymentDetails={paymentDetails} />
           )}
           {activeTab === 'cost' && (
             <CostTab checks={checks} timeEntries={timeEntries} paymentDetails={paymentDetails} cashEntries={cashEntries} />
