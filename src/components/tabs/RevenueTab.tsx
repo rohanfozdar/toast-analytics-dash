@@ -34,7 +34,7 @@ export default function RevenueTab({ checks, itemSelections, orderDetails, payme
   const changeSentiment =
     periodChangePct == null ? 'neutral' : periodChangePct > 0 ? 'positive' : 'negative';
 
-  const cur = v => v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+  const cur = formatCurrency;
 
   return (
     <div>
