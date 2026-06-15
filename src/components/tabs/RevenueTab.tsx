@@ -1,6 +1,6 @@
 // @ts-nocheck
 import useDashboardStore from '../../store/useDashboardStore';
-import { getKpiSummary, getOrderSummary } from '../../lib/calculations';
+import { getKpiSummary, getOrderSummary, getPerPersonAverage, getTipSummary } from '../../lib/calculations';
 import KpiCard from '../shared/KpiCard';
 import DataSourceNote from '../shared/DataSourceNote';
 import SalesTrendChart from '../charts/SalesTrendChart';
@@ -15,7 +15,7 @@ const SOURCE_NOTE =
   'OrderDetails.csv (Order Source, Duration, Guests). ' +
   'Net sales = Total − Tax − Discount.';
 
-export default function RevenueTab({ checks, itemSelections, orderDetails }) {
+export default function RevenueTab({ checks, itemSelections, orderDetails, paymentDetails }) {
   const { start, end } = useDashboardStore(s => s.dateRange);
 
   const { totalNetSales, totalChecks, avgCheckSize, periodChangePct } =
@@ -24,30 +24,52 @@ export default function RevenueTab({ checks, itemSelections, orderDetails }) {
   const { orderCount, avgGuests, avgDurationMin } =
     getOrderSummary(orderDetails, checks, start, end);
 
+  const ppa = getPerPersonAverage(checks, orderDetails, start, end);
+  const tips = getTipSummary(paymentDetails, checks, start, end);
+  const avgTipPerCheck = totalChecks > 0
+    ? Math.round((tips.totalTips / totalChecks) * 100) / 100
+    : 0;
+
   const changeSentiment =
     periodChangePct == null ? 'neutral' : periodChangePct > 0 ? 'positive' : 'negative';
+
+  const cur = v => v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
   return (
     <div>
       <div className="kpi-grid-4">
-        <KpiCard
-          label="Total Net Sales"
-          value={totalNetSales.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
-        />
-        <KpiCard
-          label="Total Checks"
-          value={totalChecks.toLocaleString()}
-        />
+        <KpiCard label="Total Net Sales" value={cur(totalNetSales)} />
+        <KpiCard label="Total Checks" value={totalChecks.toLocaleString()} />
         <KpiCard
           label="Avg Check Size"
-          value={avgCheckSize.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
+          value={cur(avgCheckSize)}
+          dataSourceLabel="Net sales ÷ checks (per transaction)"
         />
+        <KpiCard
+          label="Per-Person Average (PPA)"
+          value={cur(ppa)}
+          dataSourceLabel="Net sales ÷ guests (per guest)"
+        />
+      </div>
+
+      <div className="kpi-grid-3" style={{ marginTop: '16px' }}>
         <KpiCard
           label="Period-over-Period Change"
           value={periodChangePct != null ? periodChangePct.toFixed(1) + '%' : 'N/A'}
           sentiment={changeSentiment}
         />
+        <KpiCard
+          label="Average Tip / Check"
+          value={cur(avgTipPerCheck)}
+          dataSourceLabel="Separate from check totals"
+        />
+        <KpiCard
+          label="Tip %"
+          value={`${tips.tipPctOfSales.toFixed(1)}%`}
+          dataSourceLabel="Tips ÷ net sales"
+        />
       </div>
+
 
       <SalesTrendChart checks={checks} start={start} end={end} />
       <PeriodComparisonChart checks={checks} />

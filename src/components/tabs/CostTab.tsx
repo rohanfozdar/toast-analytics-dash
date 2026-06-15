@@ -7,6 +7,8 @@ import {
   computeMarginWaterfall,
   getProcessingFees,
   getCashSummary,
+  getPrimeCost,
+  getSalesPerLaborHour,
 } from '../../lib/calculations';
 import { getWeeksInRange } from '../../lib/dateUtils';
 import CostInputPanel from '../shared/CostInputPanel';
@@ -38,6 +40,12 @@ export default function CostTab({ checks, timeEntries, paymentDetails, cashEntri
   const { totalFees: processingFees, feePctOfSales } = getProcessingFees(paymentDetails, checks, start, end);
   const waterfall = computeMarginWaterfall(totalNetSales, laborCost, weeksInRange, costInputs, processingFees);
   const { totalPayIns, totalPayOuts, netCashMovement } = getCashSummary(cashEntries, start, end);
+  const prime = getPrimeCost(checks, timeEntries, costInputs, start, end);
+  const splh = getSalesPerLaborHour(checks, timeEntries, start, end);
+  const primeAlert = prime.primeCostPct > 65 ? 'true' : undefined;
+  const primeSentiment = prime.primeCostPct > 65
+    ? 'negative'
+    : prime.primeCostPct >= 60 ? 'neutral' : 'positive';
 
   const weeklyNetSales = weeksInRange > 0 ? round2(totalNetSales / weeksInRange) : 0;
   const monthlyNetSales = round2(weeklyNetSales * (52 / 12));
@@ -50,6 +58,23 @@ export default function CostTab({ checks, timeEntries, paymentDetails, cashEntri
   return (
     <div>
       <CostInputPanel checks={checks} timeEntries={timeEntries} />
+
+      <div data-role="industry-kpis" className="kpi-grid-2" style={{ marginTop: '16px' }}>
+        <div data-alert={primeAlert}>
+          <KpiCard
+            label="Prime Cost"
+            value={`${currencyFmt(prime.primeCostAmt)} · ${prime.primeCostPct.toFixed(1)}%`}
+            sentiment={primeSentiment}
+            dataSourceLabel="Target 55–65% of net sales"
+          />
+        </div>
+        <KpiCard
+          label="Sales per Labor Hour"
+          value={currencyFmt(splh)}
+          dataSourceLabel="Net sales ÷ payable hours"
+        />
+      </div>
+
 
       <MarginWaterfallChart waterfall={waterfall} />
       <div data-role="estimate-caveat">
