@@ -7,6 +7,7 @@ import { getCustomerSummary } from '../../lib/calculations';
 import KpiCard from '../shared/KpiCard';
 import DataSourceNote from '../shared/DataSourceNote';
 import { CHART_COLOR_LIST } from '../../lib/chartColors';
+import { formatCurrency, formatPercent, formatCount } from '../../lib/format';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -14,8 +15,7 @@ const SOURCE_NOTE =
   'Customer/loyalty data from CheckDetails.csv (Customer Id, Customer, Customer Phone, ' +
   'Customer Email). Only checks with a linked loyalty/customer profile are included.';
 
-const currencyFmt = v =>
-  v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+const currencyFmt = formatCurrency;
 
 export default function CustomersTab({ checks }) {
   const { start, end } = useDashboardStore(s => s.dateRange);
