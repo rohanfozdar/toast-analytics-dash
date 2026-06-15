@@ -59,6 +59,23 @@ export default function CostTab({ checks, timeEntries, paymentDetails, cashEntri
     <div>
       <CostInputPanel checks={checks} timeEntries={timeEntries} />
 
+      <div data-role="industry-kpis" className="kpi-grid-2" style={{ marginTop: '16px' }}>
+        <div data-alert={primeAlert}>
+          <KpiCard
+            label="Prime Cost"
+            value={`${currencyFmt(prime.primeCostAmt)} · ${prime.primeCostPct.toFixed(1)}%`}
+            sentiment={primeSentiment}
+            dataSourceLabel="Target 55–65% of net sales"
+          />
+        </div>
+        <KpiCard
+          label="Sales per Labor Hour"
+          value={currencyFmt(splh)}
+          dataSourceLabel="Net sales ÷ payable hours"
+        />
+      </div>
+
+
       <MarginWaterfallChart waterfall={waterfall} />
       <div data-role="estimate-caveat">
         Profit figures are estimates. Labor cost is actual (from your staff clock-in data);
