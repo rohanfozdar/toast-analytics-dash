@@ -107,14 +107,14 @@ export default function MenuPerformanceTable({ itemSelections, checks, start, en
                 <td>{row.menuItem}</td>
                 <td>{row.menuGroup}</td>
                 <td>{row.unitsSold}</td>
-                <td>{currencyFmt(row.grossRevenue)}</td>
+                <td>{formatCurrency(row.grossRevenue)}</td>
                 <td>{row.voidQty}</td>
                 <td data-alert={row.voidRate > 5 ? 'true' : undefined}>
-                  {pctFmt(row.voidRate)}
+                  {formatPercent(row.voidRate, 'ratio')}
                 </td>
-                <td>{currencyFmt(row.discountAmount)}</td>
-                <td>{currencyFmt(row.netRevenue)}</td>
-                <td>{pctFmt(row.pctOfTotal)}</td>
+                <td>{formatCurrency(row.discountAmount)}</td>
+                <td>{formatCurrency(row.netRevenue)}</td>
+                <td>{formatPercent(row.pctOfTotal, 'composition')}</td>
                 <td>
                   <input
                     type="number"
@@ -126,7 +126,7 @@ export default function MenuPerformanceTable({ itemSelections, checks, start, en
                   />
                 </td>
                 <td>
-                  {marginPct !== null ? pctFmt(marginPct) : '—'}
+                  {marginPct !== null ? formatPercent(marginPct, 'ratio') : '—'}
                 </td>
               </tr>
             );
