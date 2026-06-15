@@ -40,6 +40,12 @@ export default function CostTab({ checks, timeEntries, paymentDetails, cashEntri
   const { totalFees: processingFees, feePctOfSales } = getProcessingFees(paymentDetails, checks, start, end);
   const waterfall = computeMarginWaterfall(totalNetSales, laborCost, weeksInRange, costInputs, processingFees);
   const { totalPayIns, totalPayOuts, netCashMovement } = getCashSummary(cashEntries, start, end);
+  const prime = getPrimeCost(checks, timeEntries, costInputs, start, end);
+  const splh = getSalesPerLaborHour(checks, timeEntries, start, end);
+  const primeAlert = prime.primeCostPct > 65 ? 'true' : undefined;
+  const primeSentiment = prime.primeCostPct > 65
+    ? 'negative'
+    : prime.primeCostPct >= 60 ? 'neutral' : 'positive';
 
   const weeklyNetSales = weeksInRange > 0 ? round2(totalNetSales / weeksInRange) : 0;
   const monthlyNetSales = round2(weeklyNetSales * (52 / 12));
