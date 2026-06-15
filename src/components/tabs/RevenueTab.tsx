@@ -1,6 +1,6 @@
 // @ts-nocheck
 import useDashboardStore from '../../store/useDashboardStore';
-import { getKpiSummary, getOrderSummary } from '../../lib/calculations';
+import { getKpiSummary, getOrderSummary, getPerPersonAverage, getTipSummary } from '../../lib/calculations';
 import KpiCard from '../shared/KpiCard';
 import DataSourceNote from '../shared/DataSourceNote';
 import SalesTrendChart from '../charts/SalesTrendChart';
