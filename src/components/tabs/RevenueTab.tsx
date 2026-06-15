@@ -40,7 +40,7 @@ export default function RevenueTab({ checks, itemSelections, orderDetails, payme
     <div>
       <div className="kpi-grid-4">
         <KpiCard label="Total Net Sales" value={cur(totalNetSales)} />
-        <KpiCard label="Total Checks" value={totalChecks.toLocaleString()} />
+        <KpiCard label="Total Checks" value={formatCount(totalChecks)} />
         <KpiCard
           label="Avg Check Size"
           value={cur(avgCheckSize)}
