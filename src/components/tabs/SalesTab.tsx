@@ -13,6 +13,8 @@ import DataSourceNote from '../shared/DataSourceNote';
 
 const SOURCE_NOTE =
   'Menu data aggregated from ItemSelectionDetails.csv using AllItemsReport.csv field logic. ' +
+  'Sales Category (Food / Beverage / Alcohol) is a separate revenue axis from Menu Group ' +
+  '(Breakfast, Lunch, Bar, etc.). ' +
   'Void rate = Void Qty ÷ (Item Qty incl voids). ' +
   'Kitchen timing from KitchenTimings.csv (Fired Date to Fulfilled Date). ' +
   'Discounts from CheckDetails.csv (Discount, Reason of Discount). ' +
