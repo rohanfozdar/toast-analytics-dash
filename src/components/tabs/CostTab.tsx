@@ -88,7 +88,7 @@ export default function CostTab({ checks, timeEntries, paymentDetails, cashEntri
         <KpiCard
           label="Card Processing Fees"
           value={currencyFmt(processingFees)}
-          dataSourceLabel={`${feePctOfSales.toFixed(2)}% of net sales`}
+          dataSourceLabel={`${formatPercent(feePctOfSales, 'ratio')} of net sales`}
         />
       </div>
 
