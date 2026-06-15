@@ -4,6 +4,7 @@ import useDashboardStore from '../../store/useDashboardStore';
 import { getSalesSummary, getPrimeCost, getPerPersonAverage } from '../../lib/calculations';
 import KpiCard from '../shared/KpiCard';
 import DataSourceNote from '../shared/DataSourceNote';
+import { formatCurrency, formatPercent, formatCount } from '../../lib/format';
 
 const SOURCE_NOTE =
   'Sales Summary rollup from CheckDetails.csv (net sales, tax, discounts), ' +
@@ -11,7 +12,7 @@ const SOURCE_NOTE =
   'PaymentDetails.csv (tips, gratuity, payment method), and ' +
   'OrderDetails.csv (guest counts).';
 
-const cur = v => v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+const cur = formatCurrency;
 
 export default function SummaryTab({ checks, itemSelections, paymentDetails, orderDetails, timeEntries }) {
   const { start, end } = useDashboardStore(s => s.dateRange);
