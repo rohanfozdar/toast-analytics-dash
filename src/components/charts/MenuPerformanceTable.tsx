@@ -1,11 +1,8 @@
 // @ts-nocheck
 import { useMemo, useState } from 'react';
 import { getMenuPerformance } from '../../lib/calculations';
+import { formatCurrency, formatPercent } from '../../lib/format';
 
-const currencyFmt = v =>
-  v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-
-const pctFmt = v => `${v.toFixed(1)}%`;
 
 const SORT_KEYS = [
   'menuItem', 'menuGroup', 'unitsSold', 'grossRevenue',
