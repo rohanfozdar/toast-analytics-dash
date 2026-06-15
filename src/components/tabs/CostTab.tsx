@@ -63,7 +63,7 @@ export default function CostTab({ checks, timeEntries, paymentDetails, cashEntri
         <div data-alert={primeAlert}>
           <KpiCard
             label="Prime Cost"
-            value={`${currencyFmt(prime.primeCostAmt)} · ${prime.primeCostPct.toFixed(1)}%`}
+            value={`${currencyFmt(prime.primeCostAmt)} · ${formatPercent(prime.primeCostPct, 'ratio')}`}
             sentiment={primeSentiment}
             dataSourceLabel="Target 55–65% of net sales"
           />
