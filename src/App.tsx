@@ -19,7 +19,7 @@ function App() {
       <main>
         <div key={activeTab}>
           {activeTab === 'summary' && (
-            <SummaryTab checks={checks} itemSelections={itemSelections} paymentDetails={paymentDetails} orderDetails={orderDetails} />
+            <SummaryTab checks={checks} itemSelections={itemSelections} paymentDetails={paymentDetails} orderDetails={orderDetails} timeEntries={timeEntries} />
           )}
           {activeTab === 'revenue' && (
             <RevenueTab checks={checks} itemSelections={itemSelections} orderDetails={orderDetails} paymentDetails={paymentDetails} />
