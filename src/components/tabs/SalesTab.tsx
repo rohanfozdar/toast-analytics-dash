@@ -1,6 +1,7 @@
 // @ts-nocheck
 import useDashboardStore from '../../store/useDashboardStore';
 import MenuPerformanceTable from '../charts/MenuPerformanceTable';
+import SalesByCategoryChart from '../charts/SalesByCategoryChart';
 import DiningChannelChart from '../charts/DiningChannelChart';
 import DiscountSummary from '../charts/DiscountSummary';
 import AvgCheckChart from '../charts/AvgCheckChart';
