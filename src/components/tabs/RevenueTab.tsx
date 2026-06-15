@@ -66,7 +66,7 @@ export default function RevenueTab({ checks, itemSelections, orderDetails, payme
         />
         <KpiCard
           label="Tip %"
-          value={`${tips.tipPctOfSales.toFixed(1)}%`}
+          value={formatPercent(tips.tipPctOfSales, 'ratio')}
           dataSourceLabel="Tips ÷ net sales"
         />
       </div>
