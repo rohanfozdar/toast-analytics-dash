@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useMemo } from 'react';
 import useDashboardStore from '../../store/useDashboardStore';
-import { getSalesSummary } from '../../lib/calculations';
+import { getSalesSummary, getPrimeCost, getPerPersonAverage } from '../../lib/calculations';
 import KpiCard from '../shared/KpiCard';
 import DataSourceNote from '../shared/DataSourceNote';
 
