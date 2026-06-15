@@ -4,11 +4,11 @@ import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { getDiningChannelSplit } from '../../lib/calculations';
 import { CHART_COLOR_LIST } from '../../lib/chartColors';
+import { formatCurrency, formatPercent } from '../../lib/format';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const currencyFmt = v =>
-  v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+const currencyFmt = formatCurrency;
 
 export default function DiningChannelChart({ itemSelections, checks, start, end }) {
   const channelData = useMemo(
@@ -36,7 +36,7 @@ export default function DiningChannelChart({ itemSelections, checks, start, end 
         callbacks: {
           label: ctx => {
             const item = channelData[ctx.dataIndex];
-            return `${ctx.label}: ${currencyFmt(item.netRevenue)} (${item.pct.toFixed(1)}%)`;
+            return `${ctx.label}: ${currencyFmt(item.netRevenue)} (${formatPercent(item.pct, 'composition')})`;
           },
         },
       },
@@ -66,7 +66,7 @@ export default function DiningChannelChart({ itemSelections, checks, start, end 
             <tr key={row.diningOption}>
               <td>{row.diningOption}</td>
               <td>{currencyFmt(row.netRevenue)}</td>
-              <td>{row.pct.toFixed(1)}%</td>
+              <td>{formatPercent(row.pct, 'composition')}</td>
               <td>{currencyFmt(row.avgCheckSize)}</td>
             </tr>
           ))}

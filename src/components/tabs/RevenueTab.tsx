@@ -8,6 +8,7 @@ import PeriodComparisonChart from '../charts/PeriodComparisonChart';
 import DaypartChart from '../charts/DaypartChart';
 import DayOfWeekChart from '../charts/DayOfWeekChart';
 import OrderSourceChart from '../charts/OrderSourceChart';
+import { formatCurrency, formatPercent, formatCount, formatMinutes } from '../../lib/format';
 
 const SOURCE_NOTE =
   'Revenue data sourced from CheckDetails.csv (Opened Date, Total, Tax, Discount), ' +
@@ -33,13 +34,13 @@ export default function RevenueTab({ checks, itemSelections, orderDetails, payme
   const changeSentiment =
     periodChangePct == null ? 'neutral' : periodChangePct > 0 ? 'positive' : 'negative';
 
-  const cur = v => v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+  const cur = formatCurrency;
 
   return (
     <div>
       <div className="kpi-grid-4">
         <KpiCard label="Total Net Sales" value={cur(totalNetSales)} />
-        <KpiCard label="Total Checks" value={totalChecks.toLocaleString()} />
+        <KpiCard label="Total Checks" value={formatCount(totalChecks)} />
         <KpiCard
           label="Avg Check Size"
           value={cur(avgCheckSize)}
@@ -55,7 +56,7 @@ export default function RevenueTab({ checks, itemSelections, orderDetails, payme
       <div className="kpi-grid-3" style={{ marginTop: '16px' }}>
         <KpiCard
           label="Period-over-Period Change"
-          value={periodChangePct != null ? periodChangePct.toFixed(1) + '%' : 'N/A'}
+          value={formatPercent(periodChangePct, 'change')}
           sentiment={changeSentiment}
         />
         <KpiCard
@@ -65,7 +66,7 @@ export default function RevenueTab({ checks, itemSelections, orderDetails, payme
         />
         <KpiCard
           label="Tip %"
-          value={`${tips.tipPctOfSales.toFixed(1)}%`}
+          value={formatPercent(tips.tipPctOfSales, 'ratio')}
           dataSourceLabel="Tips ÷ net sales"
         />
       </div>
@@ -79,9 +80,9 @@ export default function RevenueTab({ checks, itemSelections, orderDetails, payme
       <div>
         <h2 className="chart-section-title" style={{ marginBottom: '16px' }}>Orders</h2>
         <div className="kpi-grid-3">
-          <KpiCard label="Order Count" value={orderCount.toLocaleString()} />
+          <KpiCard label="Order Count" value={formatCount(orderCount)} />
           <KpiCard label="Avg Guests / Order" value={avgGuests.toFixed(1)} />
-          <KpiCard label="Avg Processing Time" value={`${avgDurationMin.toFixed(0)} min`} />
+          <KpiCard label="Avg Processing Time" value={formatMinutes(avgDurationMin)} />
         </div>
       </div>
 

@@ -7,6 +7,7 @@ import { getCustomerSummary } from '../../lib/calculations';
 import KpiCard from '../shared/KpiCard';
 import DataSourceNote from '../shared/DataSourceNote';
 import { CHART_COLOR_LIST } from '../../lib/chartColors';
+import { formatCurrency, formatPercent, formatCount } from '../../lib/format';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -14,8 +15,7 @@ const SOURCE_NOTE =
   'Customer/loyalty data from CheckDetails.csv (Customer Id, Customer, Customer Phone, ' +
   'Customer Email). Only checks with a linked loyalty/customer profile are included.';
 
-const currencyFmt = v =>
-  v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+const currencyFmt = formatCurrency;
 
 export default function CustomersTab({ checks }) {
   const { start, end } = useDashboardStore(s => s.dateRange);
@@ -54,7 +54,7 @@ export default function CustomersTab({ checks }) {
         callbacks: {
           label: ctx => {
             const v = ctx.parsed;
-            const pct = nvrTotal > 0 ? (v / nvrTotal * 100).toFixed(1) : '0';
+            const pct = nvrTotal > 0 ? formatPercent(v / nvrTotal * 100, 'composition').replace('%','') : '0';
             return `${ctx.label}: ${v} (${pct}%)`;
           },
         },
@@ -65,10 +65,10 @@ export default function CustomersTab({ checks }) {
   return (
     <div>
       <div className="kpi-grid-4">
-        <KpiCard label="Unique Customers" value={uniqueCustomers.toLocaleString()} />
-        <KpiCard label="Repeat Rate" value={`${repeatCustomerRate.toFixed(1)}%`} />
+        <KpiCard label="Unique Customers" value={formatCount(uniqueCustomers)} />
+        <KpiCard label="Repeat Rate" value={formatPercent(repeatCustomerRate, 'ratio')} />
         <KpiCard label="Avg Customer Spend" value={currencyFmt(avgCustomerSpend)} />
-        <KpiCard label="Loyalty-Linked Checks" value={`${linkedCheckPct.toFixed(1)}%`} />
+        <KpiCard label="Loyalty-Linked Checks" value={formatPercent(linkedCheckPct, 'ratio')} />
       </div>
 
       <div data-chart="new-vs-returning">

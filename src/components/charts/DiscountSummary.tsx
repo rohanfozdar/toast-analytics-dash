@@ -13,11 +13,11 @@ import {
 import { getDiscountSummary, getVoidSummary } from '../../lib/calculations';
 import KpiCard from '../shared/KpiCard';
 import { CHART_COLORS } from '../../lib/chartColors';
+import { formatCurrency, formatPercent, formatCount } from '../../lib/format';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const currencyFmt = v =>
-  v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+const currencyFmt = formatCurrency;
 
 export default function DiscountSummary({ checks, itemSelections, start, end }) {
   const discountStats = useMemo(
@@ -60,11 +60,11 @@ export default function DiscountSummary({ checks, itemSelections, start, end }) 
 
       <div className="kpi-grid-3">
         <KpiCard label="Total Discount Amount" value={currencyFmt(totalDiscountAmt)} />
-        <KpiCard label="Discounted Checks" value={discountedCheckCount.toLocaleString()} />
+        <KpiCard label="Discounted Checks" value={formatCount(discountedCheckCount)} />
         <div data-alert={discountAlertLevel}>
           <KpiCard
             label="Discount % of Gross Revenue"
-            value={`${discountPctOfGross.toFixed(1)}%`}
+            value={formatPercent(discountPctOfGross, 'ratio')}
           />
         </div>
       </div>
@@ -80,7 +80,7 @@ export default function DiscountSummary({ checks, itemSelections, start, end }) 
         <h3>Voids</h3>
         <div className="kpi-grid-2">
           <KpiCard label="Total Void Amount" value={currencyFmt(voidStats.totalVoidAmt)} />
-          <KpiCard label="Total Void Count" value={voidStats.totalVoidCount.toLocaleString()} />
+          <KpiCard label="Total Void Count" value={formatCount(voidStats.totalVoidCount)} />
         </div>
       </div>
     </div>

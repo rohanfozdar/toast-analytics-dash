@@ -4,11 +4,11 @@ import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { getPaymentMix } from '../../lib/calculations';
 import { CHART_COLOR_LIST } from '../../lib/chartColors';
+import { formatCurrency, formatPercent } from '../../lib/format';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const currencyFmt = v =>
-  v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+const currencyFmt = formatCurrency;
 
 export default function PaymentMixChart({ paymentDetails, checks, start, end }) {
   const mix = useMemo(
@@ -36,7 +36,7 @@ export default function PaymentMixChart({ paymentDetails, checks, start, end }) 
         callbacks: {
           label: ctx => {
             const m = mix[ctx.dataIndex];
-            return `${ctx.label}: ${currencyFmt(m.amount)} (${m.pct.toFixed(1)}%, ${m.count} pmts)`;
+            return `${ctx.label}: ${currencyFmt(m.amount)} (${formatPercent(m.pct, 'composition')}, ${m.count} pmts)`;
           },
         },
       },

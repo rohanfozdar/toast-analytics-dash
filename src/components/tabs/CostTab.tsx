@@ -17,9 +17,9 @@ import CostBreakdownChart from '../charts/CostBreakdownChart';
 import CashByActionChart from '../charts/CashByActionChart';
 import KpiCard from '../shared/KpiCard';
 import DataSourceNote from '../shared/DataSourceNote';
+import { formatCurrency, formatPercent } from '../../lib/format';
 
-const currencyFmt = v =>
-  v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+const currencyFmt = formatCurrency;
 
 const round2 = v => Math.round(v * 100) / 100;
 
@@ -63,7 +63,7 @@ export default function CostTab({ checks, timeEntries, paymentDetails, cashEntri
         <div data-alert={primeAlert}>
           <KpiCard
             label="Prime Cost"
-            value={`${currencyFmt(prime.primeCostAmt)} · ${prime.primeCostPct.toFixed(1)}%`}
+            value={`${currencyFmt(prime.primeCostAmt)} · ${formatPercent(prime.primeCostPct, 'ratio')}`}
             sentiment={primeSentiment}
             dataSourceLabel="Target 55–65% of net sales"
           />
@@ -88,7 +88,7 @@ export default function CostTab({ checks, timeEntries, paymentDetails, cashEntri
         <KpiCard
           label="Card Processing Fees"
           value={currencyFmt(processingFees)}
-          dataSourceLabel={`${feePctOfSales.toFixed(2)}% of net sales`}
+          dataSourceLabel={`${formatPercent(feePctOfSales, 'ratio')} of net sales`}
         />
       </div>
 
@@ -132,7 +132,7 @@ export default function CostTab({ checks, timeEntries, paymentDetails, cashEntri
                 <td>{role.totalHours}</td>
                 <td>{role.overtimeHours}</td>
                 <td>{currencyFmt(role.totalPay)}</td>
-                <td>{roleLaborPct}%</td>
+                <td>{formatPercent(roleLaborPct, 'ratio')}</td>
               </tr>
             );
           })}

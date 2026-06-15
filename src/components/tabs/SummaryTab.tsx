@@ -4,6 +4,7 @@ import useDashboardStore from '../../store/useDashboardStore';
 import { getSalesSummary, getPrimeCost, getPerPersonAverage } from '../../lib/calculations';
 import KpiCard from '../shared/KpiCard';
 import DataSourceNote from '../shared/DataSourceNote';
+import { formatCurrency, formatPercent, formatCount } from '../../lib/format';
 
 const SOURCE_NOTE =
   'Sales Summary rollup from CheckDetails.csv (net sales, tax, discounts), ' +
@@ -11,7 +12,7 @@ const SOURCE_NOTE =
   'PaymentDetails.csv (tips, gratuity, payment method), and ' +
   'OrderDetails.csv (guest counts).';
 
-const cur = v => v.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+const cur = formatCurrency;
 
 export default function SummaryTab({ checks, itemSelections, paymentDetails, orderDetails, timeEntries }) {
   const { start, end } = useDashboardStore(s => s.dateRange);
@@ -39,8 +40,8 @@ export default function SummaryTab({ checks, itemSelections, paymentDetails, ord
     <div>
       <div className="kpi-grid-4">
         <KpiCard label="Net Sales" value={cur(s.netSales)} />
-        <KpiCard label="Guests" value={s.totalGuests.toLocaleString()} />
-        <KpiCard label="Checks" value={s.checkCount.toLocaleString()} />
+        <KpiCard label="Guests" value={formatCount(s.totalGuests)} />
+        <KpiCard label="Checks" value={formatCount(s.checkCount)} />
         <KpiCard label="Avg Check" value={cur(s.avgCheck)} />
       </div>
       <div className="kpi-grid-4" style={{ marginTop: '16px' }}>
@@ -53,7 +54,7 @@ export default function SummaryTab({ checks, itemSelections, paymentDetails, ord
         <div data-alert={primeAlert}>
           <KpiCard
             label="Prime Cost %"
-            value={`${prime.primeCostPct.toFixed(1)}%`}
+            value={formatPercent(prime.primeCostPct, 'ratio')}
             sentiment={primeSentiment}
             dataSourceLabel="Food + labor; target 55–65%"
           />
@@ -77,7 +78,7 @@ export default function SummaryTab({ checks, itemSelections, paymentDetails, ord
               <tr key={r.service}>
                 <td>{r.service}</td>
                 <td>{cur(r.netSales)}</td>
-                <td>{r.pct.toFixed(1)}%</td>
+                <td>{formatPercent(r.pct, 'composition')}</td>
               </tr>
             ))}
           </tbody>
@@ -95,7 +96,7 @@ export default function SummaryTab({ checks, itemSelections, paymentDetails, ord
               <tr key={r.diningOption}>
                 <td>{r.diningOption}</td>
                 <td>{cur(r.netSales)}</td>
-                <td>{r.pct.toFixed(1)}%</td>
+                <td>{formatPercent(r.pct, 'composition')}</td>
               </tr>
             ))}
           </tbody>
@@ -113,7 +114,7 @@ export default function SummaryTab({ checks, itemSelections, paymentDetails, ord
               <tr key={r.type}>
                 <td>{r.type}</td>
                 <td>{cur(r.amount)}</td>
-                <td>{r.pct.toFixed(1)}%</td>
+                <td>{formatPercent(r.pct, 'composition')}</td>
               </tr>
             ))}
           </tbody>
