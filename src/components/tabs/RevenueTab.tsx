@@ -56,7 +56,7 @@ export default function RevenueTab({ checks, itemSelections, orderDetails, payme
       <div className="kpi-grid-3" style={{ marginTop: '16px' }}>
         <KpiCard
           label="Period-over-Period Change"
-          value={periodChangePct != null ? periodChangePct.toFixed(1) + '%' : 'N/A'}
+          value={formatPercent(periodChangePct, 'change')}
           sentiment={changeSentiment}
         />
         <KpiCard
