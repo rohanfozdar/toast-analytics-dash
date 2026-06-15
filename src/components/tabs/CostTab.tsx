@@ -7,6 +7,8 @@ import {
   computeMarginWaterfall,
   getProcessingFees,
   getCashSummary,
+  getPrimeCost,
+  getSalesPerLaborHour,
 } from '../../lib/calculations';
 import { getWeeksInRange } from '../../lib/dateUtils';
 import CostInputPanel from '../shared/CostInputPanel';
