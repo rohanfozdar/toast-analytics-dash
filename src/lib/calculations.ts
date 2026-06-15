@@ -108,6 +108,24 @@ export function getSalesByService(itemSelections, checks, start, end) {
     .sort((a, b) => b.netSales - a.netSales);
 }
 
+export function getSalesByCategory(itemSelections, checks, start, end) {
+  const items = filterItemsByRange(itemSelections, checks, start, end);
+  const byCat = {};
+  for (const item of items) {
+    if (item.isVoid) continue;
+    const cat = item.salesCategory || 'Uncategorized';
+    byCat[cat] = (byCat[cat] || 0) + item.netPrice;
+  }
+  const total = Object.values(byCat).reduce((s, v) => s + v, 0);
+  return Object.entries(byCat)
+    .map(([salesCategory, netRevenue]) => ({
+      salesCategory,
+      netRevenue: Math.round(netRevenue * 100) / 100,
+      pct: total > 0 ? Math.round((netRevenue / total) * 1000) / 10 : 0,
+    }))
+    .sort((a, b) => b.netRevenue - a.netRevenue);
+}
+
 export function getSalesByDayOfWeek(checks, start, end) {
   const filtered = filterChecksByRange(checks, start, end);
 
