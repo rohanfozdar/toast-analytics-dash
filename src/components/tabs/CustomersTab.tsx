@@ -54,7 +54,7 @@ export default function CustomersTab({ checks }) {
         callbacks: {
           label: ctx => {
             const v = ctx.parsed;
-            const pct = nvrTotal > 0 ? (v / nvrTotal * 100).toFixed(1) : '0';
+            const pct = nvrTotal > 0 ? formatPercent(v / nvrTotal * 100, 'composition').replace('%','') : '0';
             return `${ctx.label}: ${v} (${pct}%)`;
           },
         },
@@ -65,10 +65,10 @@ export default function CustomersTab({ checks }) {
   return (
     <div>
       <div className="kpi-grid-4">
-        <KpiCard label="Unique Customers" value={uniqueCustomers.toLocaleString()} />
-        <KpiCard label="Repeat Rate" value={`${repeatCustomerRate.toFixed(1)}%`} />
+        <KpiCard label="Unique Customers" value={formatCount(uniqueCustomers)} />
+        <KpiCard label="Repeat Rate" value={formatPercent(repeatCustomerRate, 'ratio')} />
         <KpiCard label="Avg Customer Spend" value={currencyFmt(avgCustomerSpend)} />
-        <KpiCard label="Loyalty-Linked Checks" value={`${linkedCheckPct.toFixed(1)}%`} />
+        <KpiCard label="Loyalty-Linked Checks" value={formatPercent(linkedCheckPct, 'ratio')} />
       </div>
 
       <div data-chart="new-vs-returning">
